@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<script src="auth-guard.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laurastar — Recherche SharePoint SAVVY</title>
+<style>
+  :root{
+    --primary:#DEA468;   /* Or / Beige Laurastar */
+    --primary-d:#b9843f;
+    --secondary:#7CBADF; /* Bleu Laurastar */
+    --ink:#1a1d21; --muted:#6b7280; --line:#e6e8ec; --bg:#f6f7f9;
+    --blanc:#fff; --fnac-rouge:#D4151B;
+    --pdf:#d64542; --doc:#2a5699; --xls:#1d7145; --fold:#e0a94a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;}
+  a{text-decoration:none;color:inherit;}
+
+  /* ---------- BANDEAU HUB (retour index sur logo FNAC DARTY) ---------- */
+  .hubbar{background:var(--fnac-rouge);padding:12px 22px;display:flex;align-items:center;gap:16px;text-decoration:none;position:sticky;top:0;z-index:20;}
+  .hubbar img{height:38px;background:#fff;padding:5px 9px;border-radius:6px;transition:transform .15s;}
+  .hubbar:hover img{transform:scale(1.05);}
+  .hubbar .txt{color:#fff;font-weight:700;font-size:15px;letter-spacing:.3px;}
+
+  .hero{background:linear-gradient(120deg,#c98f52 0%,var(--primary) 55%,#e7bd8d 100%);padding:40px 22px 32px;text-align:center;}
+  .hero-logo{height:52px;background:#fff;padding:8px 16px;border-radius:10px;margin-bottom:16px;box-shadow:0 4px 16px rgba(0,0,0,.2);}
+  .hero h2{color:#fff;font-size:1.5rem;margin-bottom:6px;text-shadow:0 1px 2px rgba(0,0,0,.15);}
+  .hero p{color:#4a3719;font-size:.9rem;}
+  .searchwrap{max-width:680px;margin:20px auto 0;position:relative;}
+  .searchwrap input{width:100%;padding:15px 46px 15px 18px;font-size:16px;border:none;border-radius:12px;box-shadow:0 6px 22px rgba(0,0,0,.22);outline:none;}
+  .searchwrap .ic{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:18px;}
+
+  main{max-width:1080px;margin:0 auto;padding:22px clamp(14px,4vw,34px) 60px;}
+
+  /* ---------- BANDEAU SYNCHRO EXCEL ---------- */
+  .sync{display:flex;flex-wrap:wrap;align-items:center;gap:14px;background:#fff;border:1px solid var(--line);border-left:5px solid #1d7145;border-radius:12px;padding:12px 16px;margin-bottom:16px;box-shadow:0 2px 6px rgba(0,0,0,.05);}
+  .sync .xls-ic{flex:0 0 auto;width:40px;height:40px;border-radius:9px;background:var(--xls);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;letter-spacing:.3px;}
+  .sync .sy-main{flex:1;min-width:180px;}
+  .sync .sy-title{font-weight:700;font-size:.92rem;display:flex;align-items:center;gap:8px;}
+  .sync .live{width:9px;height:9px;border-radius:50%;background:#1d7145;box-shadow:0 0 0 0 rgba(29,113,69,.5);animation:pulse 2s infinite;flex:0 0 auto;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(29,113,69,.5);}70%{box-shadow:0 0 0 8px rgba(29,113,69,0);}100%{box-shadow:0 0 0 0 rgba(29,113,69,0);}}
+  .sync .sy-file{font-size:.76rem;color:var(--muted);margin-top:2px;}
+  .sync .sy-file b{color:var(--ink);font-weight:600;}
+  .sync .sy-stats{display:flex;gap:18px;flex-wrap:wrap;}
+  .sync .stat{text-align:center;}
+  .sync .stat .num{font-weight:800;font-size:1.15rem;color:var(--primary-d);line-height:1;}
+  .sync .stat .lbl{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-top:3px;}
+  @media(max-width:560px){.sync .sy-stats{width:100%;justify-content:space-around;border-top:1px solid var(--line);padding-top:10px;}}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;}
+  .chip{border:1px solid var(--line);background:#fff;color:var(--ink);font-size:.8rem;font-weight:600;padding:7px 13px;border-radius:20px;cursor:pointer;transition:.12s;}
+  .chip:hover{border-color:var(--primary);}
+  .chip.on{background:var(--primary);border-color:var(--primary);color:#3a2c15;}
+
+  .tools{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:14px 0 10px;}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff;}
+  .seg button{border:none;background:#fff;padding:8px 14px;font-size:.82rem;cursor:pointer;color:var(--muted);}
+  .seg button.on{background:var(--secondary);color:#fff;font-weight:600;}
+  .count{margin-left:auto;font-size:.82rem;color:var(--muted);}
+
+  .list{display:flex;flex-direction:column;gap:8px;}
+  .row{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 15px;transition:.12s;cursor:pointer;}
+  .row:hover{border-color:var(--primary);box-shadow:0 3px 12px rgba(222,164,104,.20);transform:translateY(-1px);}
+  .ext{flex:0 0 auto;width:44px;height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:800;color:#fff;letter-spacing:.3px;}
+  .ext.pdf{background:var(--pdf);} .ext.doc{background:var(--doc);} .ext.xls{background:var(--xls);}
+  .ext.fold{background:var(--fold);font-size:1.2rem;} .ext.oth{background:#8a8f98;}
+  .meta{flex:1;min-width:0;}
+  .meta .nm{font-weight:600;font-size:.95rem;line-height:1.25;word-break:break-word;}
+  .meta .bc{font-size:.72rem;color:var(--muted);margin-top:3px;word-break:break-word;}
+  .meta .bc b{color:var(--primary-d);font-weight:700;}
+  .side{flex:0 0 auto;text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:5px;}
+  .side .dt{font-size:.7rem;color:var(--muted);}
+  .side .go{font-size:.72rem;font-weight:700;color:var(--secondary);border:1px solid var(--secondary);padding:4px 10px;border-radius:16px;white-space:nowrap;}
+  .row:hover .go{background:var(--secondary);color:#fff;}
+  .empty{text-align:center;color:var(--muted);padding:50px 10px;font-size:.95rem;}
+  mark{background:#ffe9c9;color:inherit;padding:0 1px;border-radius:2px;}
+  footer{max-width:1080px;margin:0 auto;padding:0 34px 40px;color:var(--muted);font-size:.72rem;}
+  @media(max-width:620px){.side .dt{display:none;} header h1{font-size:1.05rem;}}
+  .sy-upload{display:inline-block;margin-top:8px;font-size:.74rem;font-weight:600;color:var(--secondary);border:1px solid var(--secondary);border-radius:7px;padding:5px 11px;cursor:pointer;transition:.15s;}
+  .sy-upload:hover{background:var(--secondary);color:#fff;}
+  .flt{border:1px solid var(--line);border-radius:8px;background:#fff;padding:8px 12px;font-size:.82rem;color:var(--ink);cursor:pointer;font-family:inherit;}
+  .flt:hover{border-color:var(--primary);}
+  .crumb{display:flex;flex-wrap:wrap;align-items:center;gap:2px;margin:10px 0 12px;font-size:.86rem;min-height:20px;}
+  .crumb a.cr{color:var(--primary-d);font-weight:700;cursor:pointer;padding:3px 7px;border-radius:6px;transition:.12s;}
+  .crumb a.cr:hover{background:#f0e2cf;}
+  .crumb .crsep{color:var(--muted);}
+  .crumb .crres{color:var(--muted);font-weight:600;}
+  .crumb a.crback{margin-left:auto;color:var(--secondary);border:1px solid var(--secondary);}
+  .crumb a.crback:hover{background:var(--secondary);color:#fff;}
+  .row.folder{cursor:pointer;}
+  .row.folder:hover{border-color:var(--fold);box-shadow:0 3px 12px rgba(224,169,74,.22);}
+  .row.folder .go{color:var(--fold);border-color:var(--fold);}
+  .row.folder:hover .go{background:var(--fold);color:#fff;}
+</style>
+<!-- ===== Compteur de consultations (GoatCounter) =====
+     Remplacer hub-drive-fnac par le code du site cree sur goatcounter.com
+     Tableau de bord prive : https://hub-drive-fnac.goatcounter.com  -->
+<script data-goatcounter="https://hub-drive-fnac.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+<!-- ===== Fin compteur ===== -->
+</head>
+<body>
+<!-- ===== BANDEAU HUB (retour index sur logo FNAC DARTY) ===== -->
+<a class="hubbar" href="index.html" title="Retour au HUB Drive Constructeurs">
+  <img src="IMAGES/FNAC DARTY.png" alt="Fnac Darty — Retour au HUB">
+  <span class="txt">← HUB Drive Constructeurs</span>
+</a>
+
+<div class="hero">
+  <img class="hero-logo" src="IMAGES/LAURASTAR.png" alt="Laurastar" onerror="this.style.display='none'">
+  <h2>Rechercher une pièce, un modèle, une référence</h2>
+  <p>Éclatés, listes de pièces détachées et documents — liens directs vers le SharePoint SAVVY</p>
+  <div class="searchwrap">
+    <input id="q" type="search" autocomplete="off" placeholder="Ex : S PURE, éclaté LIFT, 01575, spare part list SMART...">
+    <span class="ic">🔎</span>
+  </div>
+</div>
+
+<main>
+  <div class="sync">
+    <div class="xls-ic">XLSX</div>
+    <div class="sy-main">
+      <div class="sy-title"><span class="live" id="syncDot"></span><span id="syncTitle">Chargement du fichier Excel…</span></div>
+      <div class="sy-file">Source : <b>Laurastar_SAVVY.xlsx</b> · export SharePoint SAVVY · <span id="syncDate">—</span></div>
+      <label class="sy-upload">↥ Prévisualiser un autre export<input id="filePick" type="file" accept=".xlsx,.xls" hidden></label>
+    </div>
+    <div class="sy-stats">
+      <div class="stat"><div class="num" id="stEl">–</div><div class="lbl">Éléments</div></div>
+      <div class="stat"><div class="num" id="stFold">–</div><div class="lbl">Dossiers</div></div>
+      <div class="stat"><div class="num" id="stFile">–</div><div class="lbl">Fichiers</div></div>
+    </div>
+  </div>
+  <div class="chips" id="chips"></div>
+  <div class="tools">
+    <select id="fType" class="flt"><option value="all">Type : tous</option></select>
+    <select id="fComp" class="flt"><option value="all">Composant : tous</option></select>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="crumb" id="crumb"></div>
+  <div class="list" id="list"></div>
+</main>
+<footer>
+  Données synchronisées depuis SharePoint SAVVY (Laurastar Distributor Lounge). Les liens ouvrent directement le document ou le dossier sur groupefnac.sharepoint.com (connexion requise).
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const SP = "https://groupefnac.sharepoint.com/";
+const LIB = "https://groupefnac.sharepoint.com/sites/SAVVY_FNACDARTY/Documents%20partages/Forms/AllItems.aspx";
+const VIEW = "4B095B6C-E238-4145-AEAC-58FC81495ECD";
+const ROOTLABEL = "Laurastar Distributor Lounge";
+const SPARE = "01 - SPARE PARTS - PIECES DE RECHANGE - ERSATZTEILE";
+const EXCEL_FILE = "Laurastar/Laurastar_SAVVY.xlsx";
+
+/* ---------- Liens & libellés ---------- */
+function encPath(p){ return p.split('/').map(encodeURIComponent).join('/'); }
+function linkOf(it){ const full = it.p + '/' + it.n;
+  if(it.f){ return LIB + '?id=' + encodeURIComponent('/'+full) + '&viewid=' + VIEW; }
+  return SP + encPath(full); }
+function modelOf(it){ const i = it.p.indexOf(SPARE); if(i<0) return '—';
+  let rest = it.p.slice(i+SPARE.length).replace(/^\/+/,''); if(rest) return rest.split('/')[0];
+  return it.f ? it.n : '—'; }
+function breadcrumb(it){ let p = it.p; const i = p.indexOf(ROOTLABEL);
+  if(i>=0) p = p.slice(i+ROOTLABEL.length).replace(/^\/+/,''); return p; }
+function extClass(it){ if(it.f) return {c:'fold', t:'📁'};
+  const m = it.n.toLowerCase().match(/\.([a-z0-9]+)$/); const e = m ? m[1] : '';
+  if(e==='pdf') return {c:'pdf', t:'PDF'};
+  if(e==='doc'||e==='docx') return {c:'doc', t:'DOC'};
+  if(e==='xls'||e==='xlsx'||e==='csv') return {c:'xls', t:'XLS'};
+  return {c:'oth', t:(e?e.toUpperCase().slice(0,4):'DOC')}; }
+function famLabel(it){ return it.fa || modelOf(it); }
+
+/* ---------- Classement (depuis l'export brut) ---------- */
+const FAM=['LIFT XTRA','LIFT PLUS','SMART','LIFT','AURA PLUS','AURA','IGGI','MAGIC','GO PLUS','GO','ORIGINELLE','S PULSE','S PURE PLUS','S PURE','IZZI'];
+function classType(n,p,isfile){ if(!isfile) return '';
+  const s=(n+' '+p).toLowerCase(), nu=n.toUpperCase(), ln=n.toLowerCase();
+  if(ln.endsWith('.apk')||s.includes('repair app')) return 'Application';
+  if(ln.endsWith('.mp4')) return 'Vidéo';
+  if(ln.endsWith('.ppsx')||ln.endsWith('.pptx')) return 'Présentation';
+  if(ln.endsWith('.zip')) return 'Archive';
+  if(s.includes('exploded view')||nu.startsWith('EXPLOD')||s.includes('vue éclat')||s.includes('vue eclat')) return 'Vue éclatée';
+  if(s.includes('wiring')||nu.includes('ELECTRIC DIAGRAM')||s.includes('schéma élec')||s.includes('schema elec')||nu.startsWith('WIRING')) return 'Schéma électrique';
+  if(s.includes('spare part')||nu.startsWith('SPAREP')||nu.startsWith('SPURE')||(s.includes('liste')&&s.includes('piece'))) return 'Liste de pièces';
+  if(s.includes('troubleshoot')) return 'Troubleshooting';
+  if(s.includes('repair instruction')||s.includes('repair procedure')||p.toLowerCase().includes('standard repair')) return 'Notice de réparation';
+  if(s.includes("mode d'emploi")||nu.includes('REP_INS')||s.includes('reparation')||s.includes('réparation')) return 'Notice de réparation';
+  if(s.includes('quality')) return 'Qualité';
+  if(s.includes('technical')||s.includes('technique')||s.includes('bulletin')) return 'Info technique';
+  return ''; }
+function classFam(n,p){ const s=(n+' '+p).toUpperCase().replace(/_/g,' ');
+  for(const f of FAM){ const rx=new RegExp('\\b'+f.replace(/[-\/\\^$*+?.()|[\]{}]/g,'\\$&')+'\\b'); if(rx.test(s)) return f; } return ''; }
+function classComp(n,p){ const s=(n+' '+p).toLowerCase();
+  if(s.includes('generator')||s.includes('générateur')||s.includes('generateur')) return 'Générateur';
+  if(s.includes('iron')||s.includes('poignée')||s.includes('poignee')||/\bfer\b/.test(s)) return 'Fer';
+  if(s.includes('table')) return 'Table';
+  if(s.includes('accessor')||s.includes('accessoire')) return 'Accessoires';
+  return ''; }
+function fmtDate(d){ if(!d) return ''; if(d instanceof Date && !isNaN(d)){
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+  return String(d).slice(0,10); }
+function buildFromAoA(aoa){
+  let hr=-1;
+  for(let i=0;i<Math.min(aoa.length,10);i++){ const row=(aoa[i]||[]).map(c=>String(c==null?'':c).trim().toLowerCase());
+    if(row.includes('nom') && row.some(c=>c.includes('chemin'))){ hr=i; break; } }
+  if(hr<0) throw new Error('En-tetes introuvables (Nom / Chemin) dans le fichier Excel.');
+  const H=aoa[hr].map(c=>String(c==null?'':c).trim().toLowerCase());
+  const iNom=H.indexOf('nom');
+  const iMod=H.findIndex(c=>c==='modifié'||c==='modifie');
+  const iType=H.findIndex(c=>c.includes('type'));
+  const iPath=H.findIndex(c=>c.includes('chemin'));
+  const out=[];
+  for(let i=hr+1;i<aoa.length;i++){ const r=aoa[i]||[]; const name=r[iNom];
+    if(name==null||String(name).trim()==='') continue;
+    const typ=String(r[iType]==null?'':r[iType]).trim();
+    const path=String(r[iPath]==null?'':r[iPath]);
+    const isfile = typ.toLowerCase()!=='dossier';
+    const o={n:String(name),p:path,f:isfile?0:1,d:(iMod>=0?fmtDate(r[iMod]):'')};
+    const t=classType(o.n,path,isfile); if(t)o.t=t;
+    const fa=classFam(o.n,path); if(fa)o.fa=fa;
+    const co=classComp(o.n,path); if(co)o.co=co;
+    out.push(o); }
+  return out; }
+
+/* ---------- Arborescence ---------- */
+let DATA=[], tree=null, cwd='';
+function relOf(p){ const i=p.indexOf(ROOTLABEL); let r = i>=0 ? p.slice(i+ROOTLABEL.length) : p;
+  return r.replace(/^\/+/,'').replace(/\/+$/,''); }
+function newNode(){ return {folders:new Map(), files:[]}; }
+function ensure(rel){ let cur=tree; if(!rel) return cur;
+  for(const seg of rel.split('/')){ if(!seg) continue; if(!cur.folders.has(seg)) cur.folders.set(seg,newNode()); cur=cur.folders.get(seg); }
+  return cur; }
+function buildTree(){ tree=newNode();
+  DATA.forEach(it=>{ const rp=relOf(it.p); const parent=ensure(rp);
+    if(it.f){ ensure(rp?rp+'/'+it.n:it.n); } else { parent.files.push(it); } }); }
+function countFiles(nd){ let n=nd.files.length; for(const c of nd.folders.values()) n+=countFiles(c); return n; }
+
+/* ---------- Chargement du classeur ---------- */
+function parseWorkbook(buf, lastMod){
+  const wb=XLSX.read(buf,{type:'array',cellDates:true});
+  let rows=null;
+  for(const sn of wb.SheetNames){ const aoa=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,raw:true,defval:''});
+    try{ rows=buildFromAoA(aoa); if(rows.length) break; }catch(e){} }
+  if(!rows||!rows.length) throw new Error('Aucune donnée exploitable dans le fichier.');
+  DATA=rows; buildTree(); cwd='';
+  const files=DATA.filter(x=>x.f===0).length, folders=DATA.filter(x=>x.f===1).length;
+  document.getElementById('stEl').textContent=DATA.length;
+  document.getElementById('stFold').textContent=folders;
+  document.getElementById('stFile').textContent=files;
+  document.getElementById('syncTitle').textContent='Synchronisé avec le fichier Excel';
+  document.getElementById('syncDate').textContent = lastMod ? ('mis à jour le '+lastMod) : 'chargé';
+  document.getElementById('syncDot').style.background='#1d7145';
+  buildFilters(); render();
+}
+function showError(msg){
+  document.getElementById('syncTitle').textContent='Fichier Excel non chargé';
+  document.getElementById('syncDate').textContent=msg;
+  document.getElementById('syncDot').style.background='var(--fnac-rouge)';
+  document.getElementById('list').innerHTML='<div class="empty">Impossible de lire <b>'+EXCEL_FILE+'</b>.<br>'+msg+
+    '<br><br>La lecture automatique fonctionne une fois la page en ligne (GitHub Pages). En local, utilisez « Prévisualiser un autre export » ci-dessus.</div>';
+}
+async function loadExcel(){
+  try{
+    const res=await fetch(EXCEL_FILE,{cache:'no-store'});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const buf=await res.arrayBuffer();
+    let lm=res.headers.get('Last-Modified');
+    if(lm){ const dd=new Date(lm); if(!isNaN(dd)) lm=dd.toLocaleDateString('fr-FR'); }
+    parseWorkbook(buf, lm);
+  }catch(e){ showError(e.message||String(e)); }
+}
+
+/* ---------- Filtres ---------- */
+const chips = document.getElementById('chips');
+let curFam='all', curDocType='all', curComp='all', term='';
+function chip(label,val){ const b=document.createElement('button'); b.className='chip'+(val==='all'?' on':'');
+  b.textContent=label; b.dataset.v=val;
+  b.onclick=()=>{curFam=val; [...chips.children].forEach(c=>c.classList.toggle('on',c.dataset.v===val)); render();};
+  return b; }
+function fillSelect(el, values, allLabel){ el.innerHTML='';
+  const o0=document.createElement('option'); o0.value='all'; o0.textContent=allLabel; el.appendChild(o0);
+  values.forEach(v=>{ const o=document.createElement('option'); o.value=v; o.textContent=v; el.appendChild(o); }); }
+function buildFilters(){
+  const uniq=k=>[...new Set(DATA.map(x=>x[k]).filter(Boolean))].sort();
+  chips.innerHTML=''; curFam='all'; curDocType='all'; curComp='all';
+  chips.appendChild(chip('Toutes les familles','all'));
+  uniq('fa').forEach(m=> chips.appendChild(chip(m, m)));
+  fillSelect(document.getElementById('fType'), uniq('t'), 'Type : tous');
+  fillSelect(document.getElementById('fComp'), uniq('co'), 'Composant : tous');
+}
+document.getElementById('fType').addEventListener('change',e=>{curDocType=e.target.value; render();});
+document.getElementById('fComp').addEventListener('change',e=>{curComp=e.target.value; render();});
+const qEl=document.getElementById('q');
+qEl.addEventListener('input',()=>{term=qEl.value.trim().toLowerCase(); render();});
+document.getElementById('filePick').addEventListener('change',e=>{
+  const f=e.target.files[0]; if(!f) return; const r=new FileReader();
+  r.onload=()=>{ try{ parseWorkbook(r.result, f.lastModifiedDate?f.lastModifiedDate.toLocaleDateString('fr-FR'):null);}catch(err){showError(err.message||String(err));} };
+  r.readAsArrayBuffer(f); });
+function filtersActive(){ return term!=='' || curFam!=='all' || curDocType!=='all' || curComp!=='all'; }
+function clearAll(){ term=''; qEl.value=''; curFam='all'; curDocType='all'; curComp='all';
+  [...chips.children].forEach(c=>c.classList.toggle('on',c.dataset.v==='all'));
+  document.getElementById('fType').value='all'; document.getElementById('fComp').value='all'; render(); }
+
+/* ---------- Rendu ---------- */
+function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+function hi(s){ if(!term) return esc(s); const words=term.split(/\s+/).filter(Boolean); let out=esc(s);
+  words.forEach(w=>{ const rx=new RegExp('('+w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig'); out=out.replace(rx,'<mark>$1</mark>'); }); return out; }
+function fileRow(it, showCrumb){ const ec=extClass(it); const row=document.createElement('a');
+  row.className='row'; row.href=linkOf(it); row.target='_blank'; row.rel='noopener';
+  const tag = it.t?' · '+esc(it.t):'';
+  let sub;
+  if(showCrumb){ sub='<b>'+esc(famLabel(it))+'</b>'+tag+' · '+hi(breadcrumb(it)); }
+  else { sub=(it.fa?'<b>'+esc(it.fa)+'</b>':'') + (it.t?((it.fa?' · ':'')+esc(it.t)):''); }
+  row.innerHTML='<div class="ext '+ec.c+'">'+ec.t+'</div>'+
+    '<div class="meta"><div class="nm">'+hi(it.n)+'</div><div class="bc">'+(sub||'&nbsp;')+'</div></div>'+
+    '<div class="side">'+(it.d?'<span class="dt">'+it.d+'</span>':'')+'<span class="go">Ouvrir ↗</span></div>';
+  return row; }
+
+function render(){ filtersActive() ? renderFlat() : renderBrowse(); }
+
+function renderCrumb(){ const crumb=document.getElementById('crumb'); crumb.innerHTML='';
+  const mk=(label,rel)=>{ const a=document.createElement('a'); a.className='cr'; a.textContent=label;
+    a.onclick=()=>{cwd=rel; render();}; return a; };
+  crumb.appendChild(mk('🏠 '+ROOTLABEL,''));
+  let acc='';
+  cwd.split('/').filter(Boolean).forEach(seg=>{ acc = acc?acc+'/'+seg:seg;
+    const sep=document.createElement('span'); sep.className='crsep'; sep.textContent=' / '; crumb.appendChild(sep);
+    crumb.appendChild(mk(seg, acc)); });
+}
+function renderBrowse(){
+  renderCrumb();
+  const nd=ensure(cwd); const list=document.getElementById('list'); list.innerHTML='';
+  const folders=[...nd.folders.entries()].sort((a,b)=>a[0].localeCompare(b[0],'fr',{numeric:true}));
+  const files=nd.files.slice().sort((a,b)=>a.n.localeCompare(b.n,'fr',{numeric:true}));
+  folders.forEach(([name,child])=>{ const fc=countFiles(child);
+    const rel = cwd?cwd+'/'+name:name;
+    const row=document.createElement('div'); row.className='row folder';
+    row.onclick=()=>{cwd=rel; window.scrollTo({top:0,behavior:'smooth'}); render();};
+    row.innerHTML='<div class="ext fold">📁</div>'+
+      '<div class="meta"><div class="nm">'+esc(name)+'</div><div class="bc">'+fc+' fichier'+(fc>1?'s':'')+'</div></div>'+
+      '<div class="side"><span class="go">Ouvrir ›</span></div>';
+    list.appendChild(row); });
+  files.forEach(it=> list.appendChild(fileRow(it,false)));
+  if(!folders.length && !files.length) list.innerHTML='<div class="empty">Dossier vide.</div>';
+  document.getElementById('count').textContent =
+    folders.length+' dossier'+(folders.length>1?'s':'')+' · '+files.length+' fichier'+(files.length>1?'s':'');
+}
+function renderFlat(){
+  const crumb=document.getElementById('crumb');
+  crumb.innerHTML='';
+  const home=document.createElement('a'); home.className='cr'; home.textContent='🏠 '+ROOTLABEL; home.onclick=clearAll; crumb.appendChild(home);
+  const sep=document.createElement('span'); sep.className='crsep'; sep.textContent=' / '; crumb.appendChild(sep);
+  const res=document.createElement('span'); res.className='crres'; res.textContent='Résultats de recherche'; crumb.appendChild(res);
+  const back=document.createElement('a'); back.className='cr crback'; back.textContent='← revenir aux dossiers'; back.onclick=clearAll; crumb.appendChild(back);
+  const words=term.split(/\s+/).filter(Boolean);
+  const list=document.getElementById('list'); list.innerHTML=''; let n=0;
+  DATA.forEach(it=>{ if(it.f) return;
+    if(curFam!=='all' && it.fa!==curFam) return;
+    if(curDocType!=='all' && it.t!==curDocType) return;
+    if(curComp!=='all' && it.co!==curComp) return;
+    const hay=(it.n+' '+breadcrumb(it)+' '+(it.fa||'')+' '+(it.t||'')).toLowerCase();
+    if(words.length && !words.every(w=>hay.includes(w))) return;
+    n++; list.appendChild(fileRow(it,true)); });
+  if(n===0) list.innerHTML='<div class="empty">Aucun résultat. Essayez un autre filtre ou mot-clé.</div>';
+  const tot=DATA.filter(x=>x.f===0).length;
+  document.getElementById('count').textContent = n+' fichier'+(n>1?'s':'')+' / '+tot;
+}
+loadExcel();
+</script>
+</body>
+</html>
