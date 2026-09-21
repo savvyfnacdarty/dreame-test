@@ -81,6 +81,8 @@
     display:flex;align-items:center;justify-content:center;color:var(--dreame);flex-shrink:0;
   }
   .card .ttl{font-size:1.1rem;font-weight:700;}
+  .card .app{display:inline-flex;align-items:flex-start;line-height:1.35;gap:6px;font-size:.82rem;font-weight:700;color:#d32f2f;}
+  .card .app svg{flex:none;}
   .card .desc{font-size:.85rem;color:var(--text-2);line-height:1.5;}
   .card .go{margin-top:auto;font-size:.8rem;font-weight:700;color:var(--dreame);display:inline-flex;align-items:center;gap:6px;}
 
@@ -108,7 +110,6 @@
   <p>Ressources techniques SAV — robots aspirateurs laveurs Dreame &amp; Mova.</p>
   <nav>
     <a href="dreame.html">Recherche</a>
-    <a href="lecteur_bom.html">Lecteur BOM</a>
     <a href="accessoires.html">🧩 Références Accessoires (consommable)</a>
     <a href="robot_laveur.html" class="active">🤖 Robot laveur</a>
     <a href="aspirateur_balai_laveur.html">🧹 Aspirateur balai laveur</a>
@@ -132,6 +133,7 @@
         <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
       </div>
       <div class="ttl">Calibrage</div>
+      <div class="app"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2"/><path stroke-linecap="round" d="M11 18h2"/></svg><span>Avec l'application DreameHome<br>uniquement pour les techniciens</span></div>
       <div class="desc">Procédures de calibration robots (IMU, LDS, caméras…).</div>
       <span class="go">Ouvrir →</span>
     </a>
@@ -150,6 +152,7 @@
         <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
       </div>
       <div class="ttl">BIT Test</div>
+      <div class="app"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2"/><path stroke-linecap="round" d="M11 18h2"/></svg><span>Avec l'application DreameHome<br>uniquement pour les techniciens</span></div>
       <div class="desc">Tests unitaires composants (robots Dreame &amp; Mova).</div>
       <span class="go">Ouvrir →</span>
     </a>
@@ -163,6 +166,14 @@
       <span class="go">Ouvrir →</span>
     </a>
 
+    <a class="card" href="diag_eu.html">
+      <div class="ic">
+        <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12h4l2-5 4 10 2-5h6"/><rect x="2" y="3" width="20" height="18" rx="3"/></svg>
+      </div>
+      <div class="ttl">Consultation des erreurs du robot en ligne</div>
+      <div class="desc">Anomalies en mémoire du robot via le serveur Web Dreame (After-Sale Diag) — SN ou DID.</div>
+      <span class="go">Ouvrir →</span>
+    </a>
   </div>
 </main>
 
