@@ -4,7 +4,7 @@
 <script src="../auth-guard.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Robot laveur — SAV Dreame · Fnac Darty</title>
+<title>Test et calibrage — SAV Dreame · Fnac Darty</title>
 <style>
   :root{
     /* Header HUB (rouge Fnac Darty) */
@@ -88,8 +88,16 @@
 
   footer{background:#000;color:#fff;text-align:center;padding:14px;font-size:.8rem;}
   footer span{color:var(--orange);font-weight:600;}
-  /* Vignette techniciens (rouge) */
-  .card.tech{border-top-color:var(--rouge);background:#FFF7F7;}
+  /* ===== Bandeau techniciens (rouge) ===== */
+  .tech-banner{
+    display:flex;align-items:center;gap:12px;margin-bottom:22px;
+    background:#FDECEC;border:1.5px solid #F3B7B9;border-left:5px solid var(--rouge);
+    border-radius:var(--r-lg);padding:14px 18px;color:#8E0E12;font-size:.92rem;font-weight:600;
+  }
+  .tech-banner svg{flex:none;color:var(--rouge);}
+  .back{display:inline-flex;align-items:center;gap:6px;margin-bottom:16px;font-size:.85rem;font-weight:700;color:var(--dreame);text-decoration:none;}
+  .back:hover{text-decoration:underline;}
+  .card.tech{border-top-color:var(--rouge);}
   .card.tech:hover{border-color:var(--rouge);box-shadow:0 10px 26px rgba(212,21,27,.18);}
   .card.tech .ic{background:#FDECEC;border-color:#F3B7B9;color:var(--rouge);}
   .card.tech .go{color:var(--rouge);}
@@ -122,52 +130,30 @@
 </div>
 
 <main>
+  <a class="back" href="robot_laveur.html">← Retour Robot laveur</a>
+  <div class="tech-banner">
+    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+    <span>Réservé aux techniciens — procédures réalisées avec l'application DreameHome.</span>
+  </div>
   <div class="cards">
 
-    <a class="card" href="index_fault_codes.html">
+    <a class="card tech" href="calibration_index_MAJ.html">
       <div class="ic">
-        <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
       </div>
-      <div class="ttl">Codes Erreurs</div>
-      <div class="desc">Rechercher un code défaut et sa procédure de résolution.</div>
+      <div class="ttl">Calibrage</div>
+      <div class="app"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2"/><path stroke-linecap="round" d="M11 18h2"/></svg><span>Avec l'application DreameHome<br>uniquement pour les techniciens</span></div>
+      <div class="desc">Procédures de calibration robots (IMU, LDS, caméras…).</div>
       <span class="go">Ouvrir →</span>
     </a>
 
-    <a class="card tech" href="test_calibrage.html">
+    <a class="card tech" href="bit_test_single.html">
       <div class="ic">
-        <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085"/></svg>
+        <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
       </div>
-      <div class="ttl">Test et calibrage</div>
-      <div class="app"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg><span>Uniquement pour les techniciens</span></div>
-      <div class="desc">Calibrage (IMU, LDS, caméras…) et BIT Test (tests unitaires composants).</div>
-      <span class="go">Ouvrir →</span>
-    </a>
-
-    <a class="card" href="bulletin_service.html">
-      <div class="ic">
-        <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>
-      </div>
-      <div class="ttl">Bulletin Service</div>
-      <div class="desc">Bulletins et notes techniques SAV Dreame.</div>
-      <span class="go">Ouvrir →</span>
-    </a>
-
-
-    <a class="card" href="faq_robot.html">
-      <div class="ic">
-        <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="11" rx="3"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 5v3M9 13h.01M15 13h.01"/></svg>
-      </div>
-      <div class="ttl">FAQ Robots aspirateurs laveurs</div>
-      <div class="desc">Dépannage et réglages robots laveurs (D, E, L, P, S, X, Z).</div>
-      <span class="go">Ouvrir →</span>
-    </a>
-
-    <a class="card" href="diag_eu.html">
-      <div class="ic">
-        <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12h4l2-5 4 10 2-5h6"/><rect x="2" y="3" width="20" height="18" rx="3"/></svg>
-      </div>
-      <div class="ttl">Consultation des erreurs du robot en ligne</div>
-      <div class="desc">Anomalies en mémoire du robot via le serveur Web Dreame (After-Sale Diag) — SN ou DID.</div>
+      <div class="ttl">BIT Test</div>
+      <div class="app"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2"/><path stroke-linecap="round" d="M11 18h2"/></svg><span>Avec l'application DreameHome<br>uniquement pour les techniciens</span></div>
+      <div class="desc">Tests unitaires composants (robots Dreame &amp; Mova).</div>
       <span class="go">Ouvrir →</span>
     </a>
   </div>
