@@ -260,6 +260,23 @@ footer{color:var(--muted);font-size:.78rem;text-align:center;padding:20px 0 40px
   .gal-nav,.gal-dots,.gal-count,.lb-nav{display:none!important}
   a.btn.video::after{content:" : " attr(href);font-weight:400;font-size:8pt;word-break:break-all}
 }
+
+/* ===== BANDEAU HUB (rouge Fnac Darty) + HERO Dreame — identique aux pages dreame_sav ===== */
+.hubbar{background:#D4151B;padding:11px 22px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:20;box-shadow:0 2px 8px rgba(0,0,0,.15);font-family:"Segoe UI",system-ui,Arial,sans-serif}
+.hubbar .home{display:flex;align-items:center;gap:14px;text-decoration:none;flex-shrink:0}
+.hubbar img{height:36px;background:#fff;padding:5px 9px;border-radius:6px;transition:transform .15s}
+.hubbar:hover img{transform:scale(1.05)}
+.hubbar .txt{color:#fff;font-weight:700;font-size:14px;letter-spacing:.3px}
+.hero{background:linear-gradient(120deg,#1B4E97 0%,#2669C2 60%,#4A8AD4 100%);padding:40px 22px 30px;text-align:center;color:#fff;font-family:"Segoe UI",system-ui,Arial,sans-serif}
+.hero-logo{height:52px;background:#fff;padding:8px 16px;border-radius:10px;margin-bottom:18px;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.hero .eyebrow{font-size:.95rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;text-shadow:0 1px 2px rgba(0,0,0,.15)}
+.hero p{margin:0;color:rgba(255,255,255,.9);font-size:.92rem}
+.hero nav{display:flex;gap:8px;justify-content:center;margin-top:22px;flex-wrap:wrap}
+.hero nav a{color:#fff;text-decoration:none;font-size:.88rem;font-weight:600;padding:9px 18px;border-radius:8px;background:rgba(255,255,255,.14);border:1.5px solid rgba(255,255,255,.45);transition:.16s}
+.hero nav a:hover{background:rgba(255,255,255,.28)}
+.hero nav a.active{background:#fff;color:#1B4E97;border-color:#fff}
+.nav{top:58px}
+@media print{.hubbar,.hero{display:none!important}}
 </style>
 <!-- SheetJS : copie locale d'abord, CDN en secours -->
 <script src="lib/xlsx.full.min.js"></script>
@@ -271,6 +288,25 @@ footer{color:var(--muted);font-size:.78rem;text-align:center;padding:20px 0 40px
 <script>window.XLSX || document.write('<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"><\/script>');</script>
 </head>
 <body>
+
+<div class="hubbar">
+  <a class="home" href="../index.html" title="Retour au HUB Drive Constructeurs">
+    <img src="../dreame_sav/assets/FNAC DARTY.png" alt="Fnac Darty — Retour au HUB">
+    <span class="txt">← HUB Drive Constructeurs</span>
+  </a>
+</div>
+
+<div class="hero">
+  <img class="hero-logo" src="../dreame_sav/assets/DREAME.png" alt="Dreame" onerror="this.style.display='none'">
+  <div class="eyebrow">Petit Électro-Ménager</div>
+  <p>Ressources techniques SAV — robots aspirateurs laveurs Dreame &amp; Mova.</p>
+  <nav>
+    <a href="../dreame_sav/dreame.html">Recherche</a>
+    <a href="../dreame_sav/accessoires.html">🧩 Références Accessoires (consommable)</a>
+    <a href="../dreame_sav/robot_laveur.html" class="active">🤖 Robot laveur</a>
+    <a href="../dreame_sav/aspirateur_balai_laveur.html">🧹 Aspirateur balai laveur</a>
+  </nav>
+</div>
 
 <header class="top">
   <div class="wrap">
