@@ -16,6 +16,18 @@
   var b=document.createElement("button");b.className="totop";b.setAttribute("aria-label","Haut de page");b.textContent="↑";
   b.onclick=function(){window.scrollTo({top:0,behavior:"smooth"});};document.body.appendChild(b);
   window.addEventListener("scroll",function(){b.classList.toggle("show",window.scrollY>700);},{passive:true});
+  // Onglet Manusoft : copier identifiant / mot de passe, afficher le mot de passe
+  var say=function(t){var st=document.querySelector(".copied");if(st){st.textContent=t;clearTimeout(say.t);say.t=setTimeout(function(){st.textContent="";},2500);}};
+  document.querySelectorAll("[data-copy]").forEach(function(b){b.addEventListener("click",function(){
+    var inp=document.getElementById(b.getAttribute("data-copy")),v=inp.value,lab=b.innerHTML;
+    var ok=function(){b.innerHTML="✔ Copié";b.classList.add("done");say((inp.type==="password"?"Mot de passe":"Identifiant")+" copié dans le presse-papiers.");setTimeout(function(){b.innerHTML=lab;b.classList.remove("done");},1600);};
+    var old=function(){var t=document.createElement("textarea");t.value=v;t.setAttribute("readonly","");t.style.position="fixed";t.style.opacity="0";document.body.appendChild(t);t.select();
+      try{document.execCommand("copy");ok();}catch(e){say("Copie impossible : sélectionnez le texte puis Ctrl+C.");}document.body.removeChild(t);};
+    if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(v).then(ok,old);}else old();});});
+  document.querySelectorAll("[data-reveal]").forEach(function(b){b.addEventListener("click",function(){
+    var inp=document.getElementById(b.getAttribute("data-reveal")),show=inp.type==="password";inp.type=show?"text":"password";
+    b.setAttribute("aria-pressed",show?"true":"false");b.innerHTML=show?"🙈 Masquer":"👁 Afficher";});});
+  document.querySelectorAll(".cred input").forEach(function(i){i.addEventListener("focus",function(){i.select();});});
   // Catalogue
   var cq=document.getElementById("catq");
   if(cq){var fam="";var rows=[].slice.call(document.querySelectorAll(".row"));var cn=document.getElementById("catn");
