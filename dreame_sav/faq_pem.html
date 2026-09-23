@@ -160,12 +160,13 @@
   <div class="toolbar">
     <div class="search">
       <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M20 20l-3.5-3.5"/></svg>
-      <input id="q" type="search" placeholder="Rechercher un symptôme, une pièce, un code…" autocomplete="off">
+      <input id="q" type="search" placeholder="Mot-clé (bruit, wifi, eau…), modèle… — ou utilisez les filtres Panne ci-dessous" autocomplete="off">
       <button class="clear" id="clr" title="Effacer">&times;</button>
     </div>
     <div class="filters">
       <div class="frow"><div class="flabel">Modèle</div><div class="chips" id="fm"></div></div>
       <div class="frow"><div class="flabel">Thème</div><div class="chips" id="fc"></div></div>
+      <div class="frow"><div class="flabel">Panne</div><div class="chips" id="fs"></div></div>
     </div>
   </div>
 
@@ -173,36 +174,8 @@
   <details class="zd-panel" id="zd-balai-panel">
     <summary><span class="zd-ttl">📷🎥 Dreame Support — pannes illustrées (photos &amp; vidéo officielles)</span><span class="zd-cnt">41</span></summary>
     <div class="zd-sub">Centre d'aide officiel Dreame (Zendesk) — fiches pannes avec photos et vidéos pas-à-pas. <a class="zd-main" href="https://dreametech.zendesk.com/hc/fr" target="_blank" rel="noopener">Ouvrir le centre d'aide Dreame Support →</a></div>
-    <input class="zd-search" id="zdbSearch" type="search" placeholder="Filtrer ces 41 fiches Dreame Support (modèle, panne…)" autocomplete="off">
     <div id="zdbList"></div>
   </details>
-  <script>
-  (function(){
-    const ZDB_DATA = [["L'aspirateur eau et poussière ne s'allume pas", "https://dreametech.zendesk.com/hc/fr/articles/60236530213273-L-aspirateur-eau-et-poussi%C3%A8re-ne-s-allume-pas"], ["Aspirateur eau et poussière : Fuite d'eau du réservoir d'eau propre", "https://dreametech.zendesk.com/hc/fr/articles/60139754293273-Aspirateur-eau-et-poussi%C3%A8re-Fuite-d-eau-du-r%C3%A9servoir-d-eau-propre"], ["H15 Pro Heat : Le bras robotisé ne fonctionne pas", "https://dreametech.zendesk.com/hc/fr/articles/57806090259737-H15-Pro-Heat-Le-bras-robotis%C3%A9-ne-fonctionne-pas"], ["H15 Pro FoamWash : le bras robotique ne fonctionne pas", "https://dreametech.zendesk.com/hc/fr/articles/56830795953945-H15-Pro-FoamWash-le-bras-robotique-ne-fonctionne-pas"], ["H15 Pro : Messages d'erreur et Solutions", "https://dreametech.zendesk.com/hc/fr/articles/55557935475993-H15-Pro-Messages-d-erreur-et-Solutions"], ["H12 Pro : Messages d'erreur et Solutions", "https://dreametech.zendesk.com/hc/fr/articles/55458930929561-H12-Pro-Messages-d-erreur-et-Solutions"], ["H12 Pro : Le robot ne distribue pas d’eau", "https://dreametech.zendesk.com/hc/fr/articles/55441707077529-H12-Pro-Le-robot-ne-distribue-pas-d-eau"], ["H14 Pro : Comment prévenir les mauvaises odeurs", "https://dreametech.zendesk.com/hc/fr/articles/55167768374169-H14-Pro-Comment-pr%C3%A9venir-les-mauvaises-odeurs"], ["H14 Pro : La brosse rouleau ne tourne pas pendant le nettoyage", "https://dreametech.zendesk.com/hc/fr/articles/55152568214937-H14-Pro-La-brosse-rouleau-ne-tourne-pas-pendant-le-nettoyage"], ["H14 Pro : Messages d'erreur et Solutions", "https://dreametech.zendesk.com/hc/fr/articles/55150335708057-H14-Pro-Messages-d-erreur-et-Solutions"], ["H14 Pro : Le séchage ne démarre pas après l’auto-nettoyage", "https://dreametech.zendesk.com/hc/fr/articles/54627891514265-H14-Pro-Le-s%C3%A9chage-ne-d%C3%A9marre-pas-apr%C3%A8s-l-auto-nettoyage"], ["H14 Pro : Dépannage en cas d’échec de l’auto-nettoyage", "https://dreametech.zendesk.com/hc/fr/articles/54517005287961-H14-Pro-D%C3%A9pannage-en-cas-d-%C3%A9chec-de-l-auto-nettoyage"], ["H15S : Dépannage pour panne d'autonettoyage", "https://dreametech.zendesk.com/hc/fr/articles/52577122957593-H15S-D%C3%A9pannage-pour-panne-d-autonettoyage"], ["H15S : l'appareil ne s'allume pas", "https://dreametech.zendesk.com/hc/fr/articles/52566346117401-H15S-l-appareil-ne-s-allume-pas"], ["H15S : Dépannage de l'échec de charge", "https://dreametech.zendesk.com/hc/fr/articles/52566272460697-H15S-D%C3%A9pannage-de-l-%C3%A9chec-de-charge"], ["H14 Dual : Dépannage de l'échec de la charge", "https://dreametech.zendesk.com/hc/fr/articles/52566197783705-H14-Dual-D%C3%A9pannage-de-l-%C3%A9chec-de-la-charge"], ["H15 Pro FoamWash : dépannage des fuites d'eau du corps principal", "https://dreametech.zendesk.com/hc/fr/articles/52565435786777-H15-Pro-FoamWash-d%C3%A9pannage-des-fuites-d-eau-du-corps-principal"], ["H15 Pro FoamWash : l'icône de la brosse à rouleau est affichée", "https://dreametech.zendesk.com/hc/fr/articles/52548428255385-H15-Pro-FoamWash-l-ic%C3%B4ne-de-la-brosse-%C3%A0-rouleau-est-affich%C3%A9e"], ["H15 Pro FoamWash : l'appareil ne s'allume pas", "https://dreametech.zendesk.com/hc/fr/articles/52548089241241-H15-Pro-FoamWash-l-appareil-ne-s-allume-pas"], ["H14 AE : Comment réparer l'échec de la configuration du réseau", "https://dreametech.zendesk.com/hc/fr/articles/52548027807641-H14-AE-Comment-r%C3%A9parer-l-%C3%A9chec-de-la-configuration-du-r%C3%A9seau"], ["H14 AE émet un message de charge anormale", "https://dreametech.zendesk.com/hc/fr/articles/52547936577689-H14-AE-%C3%A9met-un-message-de-charge-anormale"], ["H15 Mix : l'appareil ne s'allume pas", "https://dreametech.zendesk.com/hc/fr/articles/52547393107481-H15-Mix-l-appareil-ne-s-allume-pas"], ["H15 Mix : Comment réparer l'échec de la configuration du réseau", "https://dreametech.zendesk.com/hc/fr/articles/52547033938201-H15-Mix-Comment-r%C3%A9parer-l-%C3%A9chec-de-la-configuration-du-r%C3%A9seau"], ["H15 Mix : dépannage des mauvaises performances de nettoyage", "https://dreametech.zendesk.com/hc/fr/articles/52546811671577-H15-Mix-d%C3%A9pannage-des-mauvaises-performances-de-nettoyage"], ["H15 Mix : La machine laisse des marques d'eau sur le sol après le nettoyage", "https://dreametech.zendesk.com/hc/fr/articles/52545621314585-H15-Mix-La-machine-laisse-des-marques-d-eau-sur-le-sol-apr%C3%A8s-le-nettoyage"], ["H15S – Échec de connexion au réseau", "https://dreametech.zendesk.com/hc/fr/articles/51929161914265-H15S-%C3%89chec-de-connexion-au-r%C3%A9seau"], ["H15 Pro Heat - Ne se charge pas", "https://dreametech.zendesk.com/hc/fr/articles/51762678531609-H15-Pro-Heat-Ne-se-charge-pas"], ["H15 Pro n'a pas réussi à connecter le réseau", "https://dreametech.zendesk.com/hc/fr/articles/51761956923417-H15-Pro-n-a-pas-r%C3%A9ussi-%C3%A0-connecter-le-r%C3%A9seau"], ["H14 Pro : Erreur vocale", "https://dreametech.zendesk.com/hc/fr/articles/51760747722905-H14-Pro-Erreur-vocale"], ["H14 Pro ne charge pas", "https://dreametech.zendesk.com/hc/fr/articles/51760200030233-H14-Pro-ne-charge-pas"], ["H14 Pro : Problème de fuite d'eau", "https://dreametech.zendesk.com/hc/fr/articles/51760049953561-H14-Pro-Probl%C3%A8me-de-fuite-d-eau"], ["H14 Pro Aucune eau ne provient du réservoirv", "https://dreametech.zendesk.com/hc/fr/articles/51758666167961-H14-Pro-Aucune-eau-ne-provient-du-r%C3%A9servoirv"], ["H13 Pro ne charge pas", "https://dreametech.zendesk.com/hc/fr/articles/51758066842777-H13-Pro-ne-charge-pas"], ["H13 Pro Aucune eau ne provient du réservoir", "https://dreametech.zendesk.com/hc/fr/articles/51757942082585-H13-Pro-Aucune-eau-ne-provient-du-r%C3%A9servoir"], ["H13 Pro Faible force d'aspiration", "https://dreametech.zendesk.com/hc/fr/articles/51757330443033-H13-Pro-Faible-force-d-aspiration"], ["H12 Pro Force d'aspiration ultra faible", "https://dreametech.zendesk.com/hc/fr/articles/51756799493017-H12-Pro-Force-d-aspiration-ultra-faible"], ["H12 Pro : Aucune sortie d'eau du réservoir", "https://dreametech.zendesk.com/hc/fr/articles/51756347489049-H12-Pro-Aucune-sortie-d-eau-du-r%C3%A9servoir"], ["H12 Pro : Traces d'eau au sol après le nettoyage", "https://dreametech.zendesk.com/hc/fr/articles/51755589126425-H12-Pro-Traces-d-eau-au-sol-apr%C3%A8s-le-nettoyage"], ["H12 Pro Faible force d'aspiration", "https://dreametech.zendesk.com/hc/fr/articles/51754770231961-H12-Pro-Faible-force-d-aspiration"], ["H12 Pro ne charge pas", "https://dreametech.zendesk.com/hc/fr/articles/51753293054361-H12-Pro-ne-charge-pas"], ["H12 Pro : Fuite d'eau du corps principal", "https://dreametech.zendesk.com/hc/fr/articles/51752415884441-H12-Pro-Fuite-d-eau-du-corps-principal"]];
-    function zdGroup(title){
-      if(/^(Robot aspirateur|Aspirateur [Rr]obot|Série Roller|L?.?Aspirateur eau et poussière)\s*[:]/.test(title)) return "Généraliste (tous modèles)";
-      const m = title.match(/^([A-Za-zÀ-ÿ0-9]+(?:\s[A-Za-zÀ-ÿ0-9'’]+){0,3}?)\s*[:–-]/);
-      return m ? m[1].trim() : "Autres";
-    }
-    function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
-    function draw(){
-      const search = document.getElementById('zdbSearch');
-      const list = document.getElementById('zdbList');
-      const q = (search.value||"").toLowerCase().trim();
-      const filtered = q ? ZDB_DATA.filter(([t])=>t.toLowerCase().includes(q)) : ZDB_DATA;
-      if(!filtered.length){ list.innerHTML = '<div class="zd-empty">Aucune fiche ne correspond.</div>'; return; }
-      const groups = {};
-      filtered.forEach(([t,u])=>{ const g = zdGroup(t); (groups[g] = groups[g]||[]).push([t,u]); });
-      const gnames = Object.keys(groups).sort((a,b)=> a==="Généraliste (tous modèles)" ? -1 : b==="Généraliste (tous modèles)" ? 1 : a.localeCompare(b,'fr'));
-      list.innerHTML = gnames.map(g=>{
-        const items = groups[g].map(([t,u])=>`<a class="zd-item" href="${u}" target="_blank" rel="noopener"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6m5-3h6v6m0-6L10 14"/></svg><span>${esc(t)}</span></a>`).join('');
-        return `<div class="zd-grp"><div class="zd-gtitle">${esc(g)}</div><div class="zd-items">${items}</div></div>`;
-      }).join('');
-    }
-    document.getElementById('zdbSearch').addEventListener('input', draw);
-    draw();
-  })();
-  </script>
 
   <div class="count" id="cnt"></div>
   <div id="list"></div>
@@ -381,11 +354,56 @@ const FAQ = [
 const MODELS = ['H11','H11 MAX','H12','H12 Pro','H12 Core','H12 Dual','H12 FlexReach','M12','H15S'];
 const CATS = ['Dépannage','Info produit','Fonctions & réglages','Consommables & entretien','Caractéristiques','Batterie & charge','Divers'];
 
-let fModel = null, fCat = null, query = '';
+let fModel = null, fCat = null, fSymptom = null, query = '';
 
 const $ = s => document.querySelector(s);
 const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const norm = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+const norm = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/['\u2019\u02BC]/g,'').toLowerCase();
+
+const SYMPTOMS = [
+  {l:"Ne s'allume pas", k:["ne s allume","s allume pas","impossible de s allumer","n allume pas","echec de mise sous tension"]},
+  {l:"Ne charge pas", k:["ne charge pas","ne peut pas se recharger","charge anormale","echec de charge","impossible de charger","ne se charge pas","charge lente","ne peut pas etre charge"]},
+  {l:"N'aspire pas / faible", k:["n aspire pas","aspiration faible","aspiration insuffisante","force d aspiration","n effectue pas l aspiration","ne peut pas aspirer","aspiration ultra faible","n aspire pas la poussiere"]},
+  {l:"Bruit anormal", k:["bruit","bruyant"]},
+  {l:"Fuite / niveau d'eau", k:["fuite d eau","eau anormale","niveau d eau","aucune eau","ne distribue pas d eau","aucune sortie d eau","aucune eau ne provient"]},
+  {l:"Wifi / réseau / hors ligne", k:["wifi","reseau","hors ligne","connexion","offline","echec de connexion","echec de la connexion"]},
+  {l:"Brosse / roue", k:["brosse","roue"]},
+  {l:"Serpillière / lavage", k:["serpilliere","lavage","lingette","detergent"]},
+  {l:"Erreur affichée", k:["erreur","code defaut","code d erreur","message d erreur","anomalie"]},
+  {l:"Amarrage / retour base", k:["amarrage","retour a la base","accoster","accostage","retour anormal a la base","retour anormal","ne revient pas"]},
+  {l:"Odeur", k:["odeur"]}
+];
+function symMatch(hayNorm, label){
+  const s = SYMPTOMS.find(x=>x.l===label);
+  return s ? s.k.some(k=>hayNorm.includes(k)) : true;
+}
+
+const ZDB_DATA = [["L'aspirateur eau et poussière ne s'allume pas", "https://dreametech.zendesk.com/hc/fr/articles/60236530213273-L-aspirateur-eau-et-poussi%C3%A8re-ne-s-allume-pas"], ["Aspirateur eau et poussière : Fuite d'eau du réservoir d'eau propre", "https://dreametech.zendesk.com/hc/fr/articles/60139754293273-Aspirateur-eau-et-poussi%C3%A8re-Fuite-d-eau-du-r%C3%A9servoir-d-eau-propre"], ["H15 Pro Heat : Le bras robotisé ne fonctionne pas", "https://dreametech.zendesk.com/hc/fr/articles/57806090259737-H15-Pro-Heat-Le-bras-robotis%C3%A9-ne-fonctionne-pas"], ["H15 Pro FoamWash : le bras robotique ne fonctionne pas", "https://dreametech.zendesk.com/hc/fr/articles/56830795953945-H15-Pro-FoamWash-le-bras-robotique-ne-fonctionne-pas"], ["H15 Pro : Messages d'erreur et Solutions", "https://dreametech.zendesk.com/hc/fr/articles/55557935475993-H15-Pro-Messages-d-erreur-et-Solutions"], ["H12 Pro : Messages d'erreur et Solutions", "https://dreametech.zendesk.com/hc/fr/articles/55458930929561-H12-Pro-Messages-d-erreur-et-Solutions"], ["H12 Pro : Le robot ne distribue pas d’eau", "https://dreametech.zendesk.com/hc/fr/articles/55441707077529-H12-Pro-Le-robot-ne-distribue-pas-d-eau"], ["H14 Pro : Comment prévenir les mauvaises odeurs", "https://dreametech.zendesk.com/hc/fr/articles/55167768374169-H14-Pro-Comment-pr%C3%A9venir-les-mauvaises-odeurs"], ["H14 Pro : La brosse rouleau ne tourne pas pendant le nettoyage", "https://dreametech.zendesk.com/hc/fr/articles/55152568214937-H14-Pro-La-brosse-rouleau-ne-tourne-pas-pendant-le-nettoyage"], ["H14 Pro : Messages d'erreur et Solutions", "https://dreametech.zendesk.com/hc/fr/articles/55150335708057-H14-Pro-Messages-d-erreur-et-Solutions"], ["H14 Pro : Le séchage ne démarre pas après l’auto-nettoyage", "https://dreametech.zendesk.com/hc/fr/articles/54627891514265-H14-Pro-Le-s%C3%A9chage-ne-d%C3%A9marre-pas-apr%C3%A8s-l-auto-nettoyage"], ["H14 Pro : Dépannage en cas d’échec de l’auto-nettoyage", "https://dreametech.zendesk.com/hc/fr/articles/54517005287961-H14-Pro-D%C3%A9pannage-en-cas-d-%C3%A9chec-de-l-auto-nettoyage"], ["H15S : Dépannage pour panne d'autonettoyage", "https://dreametech.zendesk.com/hc/fr/articles/52577122957593-H15S-D%C3%A9pannage-pour-panne-d-autonettoyage"], ["H15S : l'appareil ne s'allume pas", "https://dreametech.zendesk.com/hc/fr/articles/52566346117401-H15S-l-appareil-ne-s-allume-pas"], ["H15S : Dépannage de l'échec de charge", "https://dreametech.zendesk.com/hc/fr/articles/52566272460697-H15S-D%C3%A9pannage-de-l-%C3%A9chec-de-charge"], ["H14 Dual : Dépannage de l'échec de la charge", "https://dreametech.zendesk.com/hc/fr/articles/52566197783705-H14-Dual-D%C3%A9pannage-de-l-%C3%A9chec-de-la-charge"], ["H15 Pro FoamWash : dépannage des fuites d'eau du corps principal", "https://dreametech.zendesk.com/hc/fr/articles/52565435786777-H15-Pro-FoamWash-d%C3%A9pannage-des-fuites-d-eau-du-corps-principal"], ["H15 Pro FoamWash : l'icône de la brosse à rouleau est affichée", "https://dreametech.zendesk.com/hc/fr/articles/52548428255385-H15-Pro-FoamWash-l-ic%C3%B4ne-de-la-brosse-%C3%A0-rouleau-est-affich%C3%A9e"], ["H15 Pro FoamWash : l'appareil ne s'allume pas", "https://dreametech.zendesk.com/hc/fr/articles/52548089241241-H15-Pro-FoamWash-l-appareil-ne-s-allume-pas"], ["H14 AE : Comment réparer l'échec de la configuration du réseau", "https://dreametech.zendesk.com/hc/fr/articles/52548027807641-H14-AE-Comment-r%C3%A9parer-l-%C3%A9chec-de-la-configuration-du-r%C3%A9seau"], ["H14 AE émet un message de charge anormale", "https://dreametech.zendesk.com/hc/fr/articles/52547936577689-H14-AE-%C3%A9met-un-message-de-charge-anormale"], ["H15 Mix : l'appareil ne s'allume pas", "https://dreametech.zendesk.com/hc/fr/articles/52547393107481-H15-Mix-l-appareil-ne-s-allume-pas"], ["H15 Mix : Comment réparer l'échec de la configuration du réseau", "https://dreametech.zendesk.com/hc/fr/articles/52547033938201-H15-Mix-Comment-r%C3%A9parer-l-%C3%A9chec-de-la-configuration-du-r%C3%A9seau"], ["H15 Mix : dépannage des mauvaises performances de nettoyage", "https://dreametech.zendesk.com/hc/fr/articles/52546811671577-H15-Mix-d%C3%A9pannage-des-mauvaises-performances-de-nettoyage"], ["H15 Mix : La machine laisse des marques d'eau sur le sol après le nettoyage", "https://dreametech.zendesk.com/hc/fr/articles/52545621314585-H15-Mix-La-machine-laisse-des-marques-d-eau-sur-le-sol-apr%C3%A8s-le-nettoyage"], ["H15S – Échec de connexion au réseau", "https://dreametech.zendesk.com/hc/fr/articles/51929161914265-H15S-%C3%89chec-de-connexion-au-r%C3%A9seau"], ["H15 Pro Heat - Ne se charge pas", "https://dreametech.zendesk.com/hc/fr/articles/51762678531609-H15-Pro-Heat-Ne-se-charge-pas"], ["H15 Pro n'a pas réussi à connecter le réseau", "https://dreametech.zendesk.com/hc/fr/articles/51761956923417-H15-Pro-n-a-pas-r%C3%A9ussi-%C3%A0-connecter-le-r%C3%A9seau"], ["H14 Pro : Erreur vocale", "https://dreametech.zendesk.com/hc/fr/articles/51760747722905-H14-Pro-Erreur-vocale"], ["H14 Pro ne charge pas", "https://dreametech.zendesk.com/hc/fr/articles/51760200030233-H14-Pro-ne-charge-pas"], ["H14 Pro : Problème de fuite d'eau", "https://dreametech.zendesk.com/hc/fr/articles/51760049953561-H14-Pro-Probl%C3%A8me-de-fuite-d-eau"], ["H14 Pro Aucune eau ne provient du réservoirv", "https://dreametech.zendesk.com/hc/fr/articles/51758666167961-H14-Pro-Aucune-eau-ne-provient-du-r%C3%A9servoirv"], ["H13 Pro ne charge pas", "https://dreametech.zendesk.com/hc/fr/articles/51758066842777-H13-Pro-ne-charge-pas"], ["H13 Pro Aucune eau ne provient du réservoir", "https://dreametech.zendesk.com/hc/fr/articles/51757942082585-H13-Pro-Aucune-eau-ne-provient-du-r%C3%A9servoir"], ["H13 Pro Faible force d'aspiration", "https://dreametech.zendesk.com/hc/fr/articles/51757330443033-H13-Pro-Faible-force-d-aspiration"], ["H12 Pro Force d'aspiration ultra faible", "https://dreametech.zendesk.com/hc/fr/articles/51756799493017-H12-Pro-Force-d-aspiration-ultra-faible"], ["H12 Pro : Aucune sortie d'eau du réservoir", "https://dreametech.zendesk.com/hc/fr/articles/51756347489049-H12-Pro-Aucune-sortie-d-eau-du-r%C3%A9servoir"], ["H12 Pro : Traces d'eau au sol après le nettoyage", "https://dreametech.zendesk.com/hc/fr/articles/51755589126425-H12-Pro-Traces-d-eau-au-sol-apr%C3%A8s-le-nettoyage"], ["H12 Pro Faible force d'aspiration", "https://dreametech.zendesk.com/hc/fr/articles/51754770231961-H12-Pro-Faible-force-d-aspiration"], ["H12 Pro ne charge pas", "https://dreametech.zendesk.com/hc/fr/articles/51753293054361-H12-Pro-ne-charge-pas"], ["H12 Pro : Fuite d'eau du corps principal", "https://dreametech.zendesk.com/hc/fr/articles/51752415884441-H12-Pro-Fuite-d-eau-du-corps-principal"]];
+function zdGroup(title){
+  if(/^(Robot aspirateur|Aspirateur [Rr]obot|Série Roller|L?.?Aspirateur eau et poussière)\s*[:]/.test(title)) return "Généraliste (tous modèles)";
+  const m = title.match(/^([A-Za-zÀ-ÿ0-9]+(?:\s[A-Za-zÀ-ÿ0-9'’]+){0,3}?)\s*[:–-]/);
+  return m ? m[1].trim() : "Autres";
+}
+function zdRenderList(terms){
+  const list = document.getElementById('zdbList');
+  if(!list) return;
+  const filtered = ZDB_DATA.filter(([t]) => {
+    const hay = norm(t);
+    if (fSymptom && !symMatch(hay, fSymptom)) return false;
+    if (!terms.length) return true;
+    return terms.every(x=>hay.includes(x));
+  });
+  const panel = document.getElementById('zd-balai-panel');
+  if(!filtered.length){ list.innerHTML = '<div class="zd-empty">Aucune fiche ne correspond.</div>'; return; }
+  if((terms.length || fSymptom) && panel) panel.open = true;
+  const groups = {};
+  filtered.forEach(([t,u])=>{ const g = zdGroup(t); (groups[g] = groups[g]||[]).push([t,u]); });
+  const gnames = Object.keys(groups).sort((a,b)=> a==="Généraliste (tous modèles)" ? -1 : b==="Généraliste (tous modèles)" ? 1 : a.localeCompare(b,'fr'));
+  list.innerHTML = gnames.map(g=>{
+    const items = groups[g].map(([t,u])=>`<a class="zd-item" href="${u}" target="_blank" rel="noopener"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6m5-3h6v6m0-6L10 14"/></svg><span>${esc(t)}</span></a>`).join('');
+    return `<div class="zd-grp"><div class="zd-gtitle">${esc(g)}</div><div class="zd-items">${items}</div></div>`;
+  }).join('');
+}
 
 function buildChips(el, items, get, set){
   el.innerHTML = '';
@@ -420,14 +438,16 @@ function highlight(text, terms){
 function render(){
   syncChips($('#fm'), fModel);
   syncChips($('#fc'), fCat);
+  syncChips($('#fs'), fSymptom);
   $('#clr').style.display = query ? 'block' : 'none';
 
   const terms = norm(query).split(/\s+/).filter(Boolean);
   const hits = FAQ.filter(it => {
     if (fModel && !it.m.includes(fModel)) return false;
     if (fCat && it.c !== fCat) return false;
+    if (fSymptom && !symMatch(norm(it.q), fSymptom)) return false;
     if (!terms.length) return true;
-    const hay = norm(it.q + ' ' + it.a + ' ' + it.en + ' ' + it.m.join(' '));
+    const hay = norm(it.q + ' ' + it.m.join(' ') + ' ' + it.c);
     return terms.every(t => hay.includes(t));
   });
 
@@ -457,10 +477,13 @@ function render(){
     html += '</div>';
   });
   list.innerHTML = html;
+
+  zdRenderList(terms);
 }
 
 buildChips($('#fm'), MODELS, () => fModel, v => fModel = v);
 buildChips($('#fc'), CATS, () => fCat, v => fCat = v);
+buildChips($('#fs'), SYMPTOMS.map(s=>s.l), () => fSymptom, v => fSymptom = v);
 $('#q').addEventListener('input', e => { query = e.target.value; render(); });
 $('#clr').onclick = () => { query = ''; $('#q').value = ''; $('#q').focus(); render(); };
 document.addEventListener('keydown', e => {
