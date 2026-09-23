@@ -103,6 +103,33 @@
   @media print{
     .hubbar,.hero,.toolbar,footer{display:none;} .qa{break-inside:avoid;} .body{display:block!important;}
   }
+
+  /* ===== Dreame Support (Zendesk) — pannes illustrées (photos/vidéo) ===== */
+  .zd-panel{background:var(--surface);border:1.5px solid var(--dreame-bd);border-radius:var(--r-lg);
+    padding:14px 18px 16px;box-shadow:0 2px 6px rgba(0,0,0,.05);margin-bottom:20px;}
+  .zd-panel > summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:2px 0;}
+  .zd-panel > summary::-webkit-details-marker{display:none;}
+  .zd-panel .zd-ttl{font-size:.98rem;font-weight:800;color:var(--dreame-2);}
+  .zd-panel .zd-cnt{font-size:.76rem;font-weight:700;color:var(--dreame);background:var(--dreame-bg);
+    border:1px solid var(--dreame-bd);padding:2px 9px;border-radius:100px;}
+  .zd-panel > summary::after{content:"";margin-left:auto;width:8px;height:8px;flex-shrink:0;
+    border-right:2px solid var(--dreame);border-bottom:2px solid var(--dreame);transform:rotate(45deg);transition:var(--tr);}
+  .zd-panel[open] > summary::after{transform:rotate(-135deg);}
+  .zd-sub{font-size:.82rem;color:var(--text-2);margin:8px 0 14px;line-height:1.5;}
+  .zd-sub a.zd-main{color:var(--dreame);font-weight:700;text-decoration:none;}
+  .zd-sub a.zd-main:hover{text-decoration:underline;}
+  .zd-search{width:100%;padding:9px 12px;font-size:.85rem;font-family:inherit;margin-bottom:14px;
+    border:1.5px solid var(--border);border-radius:var(--r-md);background:#FAFBFC;color:var(--text);outline:none;transition:var(--tr);}
+  .zd-search:focus{border-color:var(--dreame);background:#fff;box-shadow:0 0 0 3px rgba(38,105,194,.12);}
+  .zd-grp{margin-bottom:14px;}
+  .zd-grp:last-child{margin-bottom:0;}
+  .zd-gtitle{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:0 2px 7px;}
+  .zd-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:7px;}
+  .zd-item{display:flex;align-items:flex-start;gap:8px;font-size:.83rem;line-height:1.4;padding:8px 11px;
+    border:1px solid var(--border);border-radius:var(--r-md);background:#FAFBFC;color:var(--text);text-decoration:none;transition:var(--tr);}
+  .zd-item:hover{border-color:var(--dreame);background:var(--dreame-bg);color:var(--dreame-2);}
+  .zd-item svg{flex-shrink:0;margin-top:2px;color:var(--dreame);}
+  .zd-empty{font-size:.83rem;color:var(--muted);padding:8px 2px;}
 </style>
 <script data-goatcounter="https://hub-drive-fnac.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
@@ -125,6 +152,7 @@
     <a href="dreame.html">Recherche</a>
     <a href="robot_laveur.html">🤖 Robot laveur</a>
     <a href="aspirateur_balai_laveur.html" class="active">🧹 Aspirateur balai laveur</a>
+    <a href="https://dreametech.zendesk.com/hc/fr" target="_blank" rel="noopener">🌐 Dreame Support ↗</a>
   </nav>
 </div>
 
@@ -140,6 +168,41 @@
       <div class="frow"><div class="flabel">Thème</div><div class="chips" id="fc"></div></div>
     </div>
   </div>
+
+  
+  <details class="zd-panel" id="zd-balai-panel">
+    <summary><span class="zd-ttl">📷🎥 Dreame Support — pannes illustrées (photos &amp; vidéo officielles)</span><span class="zd-cnt">41</span></summary>
+    <div class="zd-sub">Centre d'aide officiel Dreame (Zendesk) — fiches pannes avec photos et vidéos pas-à-pas. <a class="zd-main" href="https://dreametech.zendesk.com/hc/fr" target="_blank" rel="noopener">Ouvrir le centre d'aide Dreame Support →</a></div>
+    <input class="zd-search" id="zdbSearch" type="search" placeholder="Filtrer ces 41 fiches Dreame Support (modèle, panne…)" autocomplete="off">
+    <div id="zdbList"></div>
+  </details>
+  <script>
+  (function(){
+    const ZDB_DATA = [["L'aspirateur eau et poussière ne s'allume pas", "https://dreametech.zendesk.com/hc/fr/articles/60236530213273-L-aspirateur-eau-et-poussi%C3%A8re-ne-s-allume-pas"], ["Aspirateur eau et poussière : Fuite d'eau du réservoir d'eau propre", "https://dreametech.zendesk.com/hc/fr/articles/60139754293273-Aspirateur-eau-et-poussi%C3%A8re-Fuite-d-eau-du-r%C3%A9servoir-d-eau-propre"], ["H15 Pro Heat : Le bras robotisé ne fonctionne pas", "https://dreametech.zendesk.com/hc/fr/articles/57806090259737-H15-Pro-Heat-Le-bras-robotis%C3%A9-ne-fonctionne-pas"], ["H15 Pro FoamWash : le bras robotique ne fonctionne pas", "https://dreametech.zendesk.com/hc/fr/articles/56830795953945-H15-Pro-FoamWash-le-bras-robotique-ne-fonctionne-pas"], ["H15 Pro : Messages d'erreur et Solutions", "https://dreametech.zendesk.com/hc/fr/articles/55557935475993-H15-Pro-Messages-d-erreur-et-Solutions"], ["H12 Pro : Messages d'erreur et Solutions", "https://dreametech.zendesk.com/hc/fr/articles/55458930929561-H12-Pro-Messages-d-erreur-et-Solutions"], ["H12 Pro : Le robot ne distribue pas d’eau", "https://dreametech.zendesk.com/hc/fr/articles/55441707077529-H12-Pro-Le-robot-ne-distribue-pas-d-eau"], ["H14 Pro : Comment prévenir les mauvaises odeurs", "https://dreametech.zendesk.com/hc/fr/articles/55167768374169-H14-Pro-Comment-pr%C3%A9venir-les-mauvaises-odeurs"], ["H14 Pro : La brosse rouleau ne tourne pas pendant le nettoyage", "https://dreametech.zendesk.com/hc/fr/articles/55152568214937-H14-Pro-La-brosse-rouleau-ne-tourne-pas-pendant-le-nettoyage"], ["H14 Pro : Messages d'erreur et Solutions", "https://dreametech.zendesk.com/hc/fr/articles/55150335708057-H14-Pro-Messages-d-erreur-et-Solutions"], ["H14 Pro : Le séchage ne démarre pas après l’auto-nettoyage", "https://dreametech.zendesk.com/hc/fr/articles/54627891514265-H14-Pro-Le-s%C3%A9chage-ne-d%C3%A9marre-pas-apr%C3%A8s-l-auto-nettoyage"], ["H14 Pro : Dépannage en cas d’échec de l’auto-nettoyage", "https://dreametech.zendesk.com/hc/fr/articles/54517005287961-H14-Pro-D%C3%A9pannage-en-cas-d-%C3%A9chec-de-l-auto-nettoyage"], ["H15S : Dépannage pour panne d'autonettoyage", "https://dreametech.zendesk.com/hc/fr/articles/52577122957593-H15S-D%C3%A9pannage-pour-panne-d-autonettoyage"], ["H15S : l'appareil ne s'allume pas", "https://dreametech.zendesk.com/hc/fr/articles/52566346117401-H15S-l-appareil-ne-s-allume-pas"], ["H15S : Dépannage de l'échec de charge", "https://dreametech.zendesk.com/hc/fr/articles/52566272460697-H15S-D%C3%A9pannage-de-l-%C3%A9chec-de-charge"], ["H14 Dual : Dépannage de l'échec de la charge", "https://dreametech.zendesk.com/hc/fr/articles/52566197783705-H14-Dual-D%C3%A9pannage-de-l-%C3%A9chec-de-la-charge"], ["H15 Pro FoamWash : dépannage des fuites d'eau du corps principal", "https://dreametech.zendesk.com/hc/fr/articles/52565435786777-H15-Pro-FoamWash-d%C3%A9pannage-des-fuites-d-eau-du-corps-principal"], ["H15 Pro FoamWash : l'icône de la brosse à rouleau est affichée", "https://dreametech.zendesk.com/hc/fr/articles/52548428255385-H15-Pro-FoamWash-l-ic%C3%B4ne-de-la-brosse-%C3%A0-rouleau-est-affich%C3%A9e"], ["H15 Pro FoamWash : l'appareil ne s'allume pas", "https://dreametech.zendesk.com/hc/fr/articles/52548089241241-H15-Pro-FoamWash-l-appareil-ne-s-allume-pas"], ["H14 AE : Comment réparer l'échec de la configuration du réseau", "https://dreametech.zendesk.com/hc/fr/articles/52548027807641-H14-AE-Comment-r%C3%A9parer-l-%C3%A9chec-de-la-configuration-du-r%C3%A9seau"], ["H14 AE émet un message de charge anormale", "https://dreametech.zendesk.com/hc/fr/articles/52547936577689-H14-AE-%C3%A9met-un-message-de-charge-anormale"], ["H15 Mix : l'appareil ne s'allume pas", "https://dreametech.zendesk.com/hc/fr/articles/52547393107481-H15-Mix-l-appareil-ne-s-allume-pas"], ["H15 Mix : Comment réparer l'échec de la configuration du réseau", "https://dreametech.zendesk.com/hc/fr/articles/52547033938201-H15-Mix-Comment-r%C3%A9parer-l-%C3%A9chec-de-la-configuration-du-r%C3%A9seau"], ["H15 Mix : dépannage des mauvaises performances de nettoyage", "https://dreametech.zendesk.com/hc/fr/articles/52546811671577-H15-Mix-d%C3%A9pannage-des-mauvaises-performances-de-nettoyage"], ["H15 Mix : La machine laisse des marques d'eau sur le sol après le nettoyage", "https://dreametech.zendesk.com/hc/fr/articles/52545621314585-H15-Mix-La-machine-laisse-des-marques-d-eau-sur-le-sol-apr%C3%A8s-le-nettoyage"], ["H15S – Échec de connexion au réseau", "https://dreametech.zendesk.com/hc/fr/articles/51929161914265-H15S-%C3%89chec-de-connexion-au-r%C3%A9seau"], ["H15 Pro Heat - Ne se charge pas", "https://dreametech.zendesk.com/hc/fr/articles/51762678531609-H15-Pro-Heat-Ne-se-charge-pas"], ["H15 Pro n'a pas réussi à connecter le réseau", "https://dreametech.zendesk.com/hc/fr/articles/51761956923417-H15-Pro-n-a-pas-r%C3%A9ussi-%C3%A0-connecter-le-r%C3%A9seau"], ["H14 Pro : Erreur vocale", "https://dreametech.zendesk.com/hc/fr/articles/51760747722905-H14-Pro-Erreur-vocale"], ["H14 Pro ne charge pas", "https://dreametech.zendesk.com/hc/fr/articles/51760200030233-H14-Pro-ne-charge-pas"], ["H14 Pro : Problème de fuite d'eau", "https://dreametech.zendesk.com/hc/fr/articles/51760049953561-H14-Pro-Probl%C3%A8me-de-fuite-d-eau"], ["H14 Pro Aucune eau ne provient du réservoirv", "https://dreametech.zendesk.com/hc/fr/articles/51758666167961-H14-Pro-Aucune-eau-ne-provient-du-r%C3%A9servoirv"], ["H13 Pro ne charge pas", "https://dreametech.zendesk.com/hc/fr/articles/51758066842777-H13-Pro-ne-charge-pas"], ["H13 Pro Aucune eau ne provient du réservoir", "https://dreametech.zendesk.com/hc/fr/articles/51757942082585-H13-Pro-Aucune-eau-ne-provient-du-r%C3%A9servoir"], ["H13 Pro Faible force d'aspiration", "https://dreametech.zendesk.com/hc/fr/articles/51757330443033-H13-Pro-Faible-force-d-aspiration"], ["H12 Pro Force d'aspiration ultra faible", "https://dreametech.zendesk.com/hc/fr/articles/51756799493017-H12-Pro-Force-d-aspiration-ultra-faible"], ["H12 Pro : Aucune sortie d'eau du réservoir", "https://dreametech.zendesk.com/hc/fr/articles/51756347489049-H12-Pro-Aucune-sortie-d-eau-du-r%C3%A9servoir"], ["H12 Pro : Traces d'eau au sol après le nettoyage", "https://dreametech.zendesk.com/hc/fr/articles/51755589126425-H12-Pro-Traces-d-eau-au-sol-apr%C3%A8s-le-nettoyage"], ["H12 Pro Faible force d'aspiration", "https://dreametech.zendesk.com/hc/fr/articles/51754770231961-H12-Pro-Faible-force-d-aspiration"], ["H12 Pro ne charge pas", "https://dreametech.zendesk.com/hc/fr/articles/51753293054361-H12-Pro-ne-charge-pas"], ["H12 Pro : Fuite d'eau du corps principal", "https://dreametech.zendesk.com/hc/fr/articles/51752415884441-H12-Pro-Fuite-d-eau-du-corps-principal"]];
+    function zdGroup(title){
+      if(/^(Robot aspirateur|Aspirateur [Rr]obot|Série Roller|L?.?Aspirateur eau et poussière)\s*[:]/.test(title)) return "Généraliste (tous modèles)";
+      const m = title.match(/^([A-Za-zÀ-ÿ0-9]+(?:\s[A-Za-zÀ-ÿ0-9'’]+){0,3}?)\s*[:–-]/);
+      return m ? m[1].trim() : "Autres";
+    }
+    function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+    function draw(){
+      const search = document.getElementById('zdbSearch');
+      const list = document.getElementById('zdbList');
+      const q = (search.value||"").toLowerCase().trim();
+      const filtered = q ? ZDB_DATA.filter(([t])=>t.toLowerCase().includes(q)) : ZDB_DATA;
+      if(!filtered.length){ list.innerHTML = '<div class="zd-empty">Aucune fiche ne correspond.</div>'; return; }
+      const groups = {};
+      filtered.forEach(([t,u])=>{ const g = zdGroup(t); (groups[g] = groups[g]||[]).push([t,u]); });
+      const gnames = Object.keys(groups).sort((a,b)=> a==="Généraliste (tous modèles)" ? -1 : b==="Généraliste (tous modèles)" ? 1 : a.localeCompare(b,'fr'));
+      list.innerHTML = gnames.map(g=>{
+        const items = groups[g].map(([t,u])=>`<a class="zd-item" href="${u}" target="_blank" rel="noopener"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6m5-3h6v6m0-6L10 14"/></svg><span>${esc(t)}</span></a>`).join('');
+        return `<div class="zd-grp"><div class="zd-gtitle">${esc(g)}</div><div class="zd-items">${items}</div></div>`;
+      }).join('');
+    }
+    document.getElementById('zdbSearch').addEventListener('input', draw);
+    draw();
+  })();
+  </script>
 
   <div class="count" id="cnt"></div>
   <div id="list"></div>
