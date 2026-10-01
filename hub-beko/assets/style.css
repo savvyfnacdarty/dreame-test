@@ -137,3 +137,8 @@ img.inl{display:inline;vertical-align:middle;border:1px solid var(--line);border
 .chip.br{color:#fff;margin-left:4px}
 .chip.b-beko{background:#0a5fb4}.chip.b-whirlpool{background:#f0a800;color:#1a1a1a}.chip.b-grundig{background:#1b8a4b}.chip.b-hotpoint{background:#d2531f}.chip.b-indesit{background:#2bb3d9;color:#06202b}
 .hit .chip{margin-left:4px}
+
+/* Miniature du bandeau de commande (programmes test) */
+.hit .bd{float:right;width:230px;max-width:42%;height:auto;max-height:96px;object-fit:contain;margin:0 0 6px 14px;background:#fff;border:1px solid var(--line);border-radius:6px;padding:2px}
+.hit .hl::after{content:"";display:block;clear:both}
+@media (max-width:720px){.hit .bd{width:130px;max-height:70px}}
