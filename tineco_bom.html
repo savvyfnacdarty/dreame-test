@@ -138,7 +138,7 @@ footer.ft{padding:14px 22px;color:var(--muted);font-size:11px;border-top:1px sol
     <div class="refbar" id="dRefs"></div>
   </header>
   <div class="toolbar">
-    <button class="btn" id="back">← Retour</button>
+    <button class="btn" id="back">← Recherche</button>
     <input type="text" id="pq" placeholder="Filtrer les pièces (désignation, réf…)" autocomplete="off">
     <select id="gsel" class="hide" title="Appareil"></select>
     <select id="csel" class="hide" title="Catégorie"></select>
@@ -413,7 +413,7 @@ $('onlyImg').onchange=e=>{ V.img=e.target.checked; V.lim=240; render(); };
 $('more').onclick=()=>{ V.lim+=480; render(); };
 document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{ document.querySelectorAll('.seg button').forEach(x=>x.classList.toggle('on',x===b));
   const s=b.dataset.s; document.documentElement.style.setProperty('--imgh',{S:'120px',M:'168px',L:'270px'}[s]); document.documentElement.style.setProperty('--cw',{S:'180px',M:'228px',L:'330px'}[s]); });
-$('back').onclick=()=>{ $('viewer').classList.add('hide'); $('home').classList.remove('hide'); history.replaceState(null,'',location.pathname); window.scrollTo(0,0); };
+$('back').onclick=()=>{ if(!_P.has('accueil')){ if(document.referrer&&/tineco_recherche/.test(document.referrer)) history.back(); else location.href='tineco_recherche.html'; return; } $('viewer').classList.add('hide'); $('home').classList.remove('hide'); history.replaceState(null,'',location.pathname); window.scrollTo(0,0); };
 window.addEventListener('scroll',()=>$('topBtn').classList.toggle('show',window.scrollY>400));
 $('topBtn').onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
 
@@ -464,7 +464,10 @@ async function init(){
   }catch(e){ showWarn('La liste des fichiers SAVVY n\'a pas pu être chargée (<code>Tineco/data/Tineco_sharepoint_savvy.xlsx</code>). Vous pouvez quand même glisser un fichier Spare Part List dans le cadre ci-dessous.'); }
   renderList();
   const f=new URLSearchParams(location.search).get('file'); if(f) openByName(f); }
-init(); initGlobal();
+/* Point de recherche unique : l'accueil est tineco_recherche.html. Cette page n'est plus qu'un lecteur (?fg= ?ref= ?q= ?file=) ; ?accueil=1 réaffiche l'ancien accueil. */
+const _P=new URLSearchParams(location.search);
+if(!['fg','ref','q','file','accueil'].some(k=>_P.has(k))) location.replace('tineco_recherche.html');
+else { init(); initGlobal(); }
 </script>
 </body>
 </html>
