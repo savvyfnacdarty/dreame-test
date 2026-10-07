@@ -19,8 +19,11 @@
     s.src = url;
     s.onload = cb;
     s.onerror = function () {
-      // En cas d'échec de chargement, on réaffiche pour ne pas bloquer (mode dégradé)
+      // Mode strict : si l'authentification ne peut pas être vérifiée, la page reste inaccessible
       document.documentElement.style.visibility = "";
+      document.body.innerHTML = '<div style="font:16px system-ui,Arial,sans-serif;max-width:520px;margin:15vh auto;padding:24px;text-align:center">' +
+        '<h2 style="color:#D4151B">Accès impossible</h2><p>Le service d\'authentification est injoignable. ' +
+        'Vérifiez votre connexion (réseau Fnac Darty / VPN) puis rechargez la page.</p></div>';
     };
     document.head.appendChild(s);
   }
