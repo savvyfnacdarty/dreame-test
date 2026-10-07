@@ -294,7 +294,29 @@ async function importFiles(files){
       alert('« '+f.name+' » n\'est ni le tableau de documentation, ni l\'export SharePoint SAVVY, ni le Global spare parts list.');
     }catch(e){ alert('Lecture impossible : '+f.name); } }
   afterLoad(); }
+/* ---------- liens SharePoint : reconstruits depuis le chemin (comme kitchenaid.html) ----------
+   Les liens « partage » (/:w:/r/…?d=…) du tableau de documentation cassent (404) quand le fichier est
+   remplacé ou renommé. On les remplace par le lien direct bâti sur le chemin réel de l'export SAVVY. */
+let _idx=null,_idxN=-1;
+function savIndex(){ if(_idx&&_idxN===SAV.length) return _idx; _idx=new Map(); _idxN=SAV.length;
+  for(const f of SAV){ if(f.f) continue; _idx.set(String(f.p+'/'+f.n).replace(/^\/+/,'').toLowerCase(),f); } return _idx; }
+function resolveLink(url,label){
+  if(!url||!SAV.length) return url;
+  if(label){ const L=norm(String(label).replace(/\.[a-z0-9]{2,4}$/i,'')); const ex=SAV.filter(x=>!x.f&&norm(x.n.replace(/\.[a-z0-9]{2,4}$/i,''))===L);
+    if(ex.length){ const f=ex.find(x=>/1\.repair manual/i.test(x.p))||ex[0]; return fileLink(f.p,f.n)+(/\.(docx?|xlsx?|pptx?)$/i.test(f.n)?'?web=1':''); } }
+  const m=/\/sites\/SAVVY_FNACDARTY\/([^?#]+)/i.exec(url); if(!m) return url;
+  let path; try{ path=decodeURIComponent(m[1]); }catch(_){ return url; }
+  const key=('sites/SAVVY_FNACDARTY/'+path).toLowerCase(), I=savIndex();
+  let f=I.get(key);
+  if(!f){ const name=path.split('/').pop(); const cand=SAV.filter(x=>!x.f&&norm(x.n)===norm(name)); if(cand.length) f=cand.find(x=>/1\.repair manual|repair manual/i.test(x.p))||cand[0]; }
+  if(!f) return url;
+  return fileLink(f.p,f.n)+(/\.(docx?|xlsx?|pptx?)$/i.test(f.n)?'?web=1':''); }
+function fixLinks(){
+  for(const d of DOCS){ if(d.man&&d.man.u) d.man.u=resolveLink(d.man.u,d.man.l); d.par.forEach(p=>{ if(p.u) p.u=resolveLink(p.u,p.l); }); }
+  if(typeof MANUAL_LINKS!=='undefined'){ if(!fixLinks.o) fixLinks.o=Object.assign({},MANUAL_LINKS); for(const k in fixLinks.o) MANUAL_LINKS[k]=resolveLink(fixLinks.o[k],k); }
+  GD.forEach(d=>{ d.man=manualOf(d.model); }); }
 function afterLoad(){
+  fixLinks();
   const ok=(v)=>v&&!String(v).startsWith('ERR');
   const dotc=(ok(loaded.doc)&&ok(loaded.sav)&&ok(loaded.glob))?'':'ko';
   const nF=SAV.filter(x=>!x.f).length, nD=SAV.filter(x=>x.f).length;
