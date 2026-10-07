@@ -352,6 +352,7 @@ function searchDocs(tk){
 function searchSav(tk){
   const out=[];
   for(const f of SAV){
+    if(isParts(f)) continue;
     if(S.ext && kind(f).l!==S.ext) continue;
     if(!tk.every(t=>f.hay.includes(t))) continue;
     let sc=0;
@@ -380,13 +381,8 @@ function docCard(d){
   let links='';
   links += d.man ? (d.man.u?'<a class="lk man" href="'+esc(d.man.u)+'" target="_blank" rel="noopener">📘 <span>'+hl(d.man.l)+'</span></a>':'<span class="lk none">📘 '+esc(d.man.l)+'</span>')
                  : '<span class="lk none">📘 Pas de manuel référencé</span>';
-  if(d.par.length) links += d.par.map(p=>(p.u?'<a class="lk par" href="'+esc(p.u)+'" target="_blank" rel="noopener">🔧 <span>'+hl(p.l)+'</span></a>':'<span class="lk none">🔧 '+esc(p.l)+'</span>')+
-      (/\.xlsx?$/i.test(p.l)?'<a class="lk bom" href="'+bomLink(p.l)+'" title="Ouvrir la liste de pièces avec les photos">🔍 BOM</a>':'')).join('');
-  else links += '<span class="lk none">🔧 Pas de liste de pièces</span>';
   const gh=GFG.size?globalHref(d.refs):'';
   if(gh) links += '<a class="lk bom" href="'+gh+'" title="Liste de pièces détachées EU avec photos (Global spare parts list)">🔧 Pièces détachées &amp; photos</a>';
-  const n=relatedCount(d.fm);
-  if(n) links += '<button class="lk rel" data-q="'+esc(d.fm)+'" data-tab="sav" title="Voir les fichiers SAVVY contenant '+esc(d.fm)+'">📂 '+n+' fichier'+(n>1?'s':'')+' SAVVY · '+esc(d.fm)+'</button>';
   return '<div class="card doc"><div class="top"><span class="nm">'+hl(d.com)+'</span>'+(d.fam?'<span class="badge">'+esc(d.fam)+'</span>':'')+(d.fm?'<span class="badge fm">'+hl(d.fm)+'</span>':'')+'</div>'+
          (refs?'<div class="refs">'+refs+'</div>':'')+'<div class="links">'+links+'</div></div>'; }
 function fileCard(f){
@@ -394,7 +390,7 @@ function fileCard(f){
   return '<div class="card file"><div class="ico '+k.c+'">'+k.t+'</div><div class="info"><a class="fn" href="'+esc(f.u)+'" target="_blank" rel="noopener">'+hl(f.n)+'</a>'+
          '<div class="pa">'+(f.rel?hl(f.rel.replace(/\//g,' › ')):'Tineco')+'</div></div>'+
          '<div class="dt">'+fmtDate(f.d)+(f.f?'':'<a href="'+esc(f.pu)+'" target="_blank" rel="noopener">📂 dossier</a>')+'</div>'+
-         (isBom(f)?'<a class="bomb" href="'+bomLink(f.n)+'" title="Ouvrir la liste de pièces avec les photos">🔍 Lecteur BOM</a>':'')+'</div>'; }
+         '</div>'; }
 function devMan(d){
   let h='';
   if(d.man){ h+= d.man.url ? '<a class="lk man" href="'+esc(d.man.url)+'" target="_blank" rel="noopener" title="Manuel de réparation (SAVVY)'+(d.man.approx?' — rapprochement approximatif, à vérifier':'')+'">📘 <span>'+esc(d.man.name)+(d.man.approx?' ⚠️':'')+'</span></a>'
@@ -414,6 +410,7 @@ function partCard(p,i){
     '<div class="prefs"><span>Réf. pièce <b>'+hl(p.code||'—')+'</b></span><span>Réf. SAV <b class="sp">'+hl(p.sap||'—')+'</b></span><span><a href="'+bomDev(p.fg)+'" title="Toutes les pièces de cet appareil">'+hl(p.fgn)+' · '+hl(p.fg)+'</a></span></div>'+
     (p.sub?'<div class="psub">↻ Remplace / substitut : '+hl(p.sub)+'</div>':'')+'</div></div>'; }
 function bomLink(name){ return 'tineco_bom.html?file='+encodeURIComponent(name); }
+function isParts(f){ return /spare\s*part|\bSP\s*LIST|sp\s*list\s*of/i.test((f.rel||'')+' '+f.n); }
 function isBom(f){ return !f.f && /^xlsx?$/.test(f.ext) && /spare\s*part|\bSP\s*LIST|spare parts/i.test(f.rel+' '+f.n); }
 
 function render(){
