@@ -122,11 +122,12 @@ mark{background:var(--lime);color:inherit;padding:0 1px;border-radius:2px;}
   <div id="results"></div>
 </main>
 <div id="lb"><img alt=""><div class="cap"></div></div>
-<div style="text-align:center;font-size:.78rem;color:#6b7280;padding:0 12px 28px">Ancien catalogue (appareils &amp; pièces intégrés) : <a href="tineco_catalogue.html" style="color:#0a63c9">tineco_catalogue.html</a></div>
+<div style="text-align:center;font-size:.78rem;color:#6b7280;padding:0 12px 28px">Pièces détachées : synchronisées depuis <code>Tineco/data/Global spare parts list-EU-update.xlsx</code> · Manuels : <code>Tineco/data/tineco_manuels.js</code> + tableau de documentation</div>
 <button id="topBtn" title="Haut de page">↑</button>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="Tineco/data/cn_fr_glossaire.js"></script>
+<script src="Tineco/data/tineco_manuels.js"></script>
 <script>
 /* =====================================================================
    Tineco — recherche dans les 2 fichiers Excel du dossier Tineco/data/ :
@@ -202,6 +203,10 @@ function translateCN(text){
   if(!translateCN.s) translateCN.s = CN_FR_TERMS.slice().sort((a,b)=>b[0].length-a[0].length);
   for(const [zh,fr] of translateCN.s){ if(out.indexOf(zh)!==-1) out=out.split(zh).join(fr); }
   return out; }
+function manualOf(series){
+  const m=/^([A-Z]{2}\d{4})/.exec(String(series||'').toUpperCase()); if(!m||typeof MANUAL_BY_FACTORY_MODEL==='undefined') return null;
+  const name=MANUAL_BY_FACTORY_MODEL[m[1]]; if(!name) return null;
+  return {fm:m[1],name,url:(MANUAL_LINKS[name]||''),approx:APPROX_MANUALS.has(name)}; }
 function parseGlobal(wb){
   const nm=wb.SheetNames.find(n=>n==='EU SP list')||wb.SheetNames.find(n=>/EU\s*SP/i.test(n));
   if(!nm) throw new Error('Feuille « EU SP list » introuvable.');
@@ -224,7 +229,7 @@ function parseGlobal(wb){
     const d=dm.get(fg); d.n++; if(o.src) d.ph++; }
   if(!P.length) throw new Error('Aucune pièce lue dans « EU SP list ».');
   GP=P; GD=[...dm.values()].sort((x,y)=>x.fgn.localeCompare(y.fgn,'fr',{numeric:true})||x.fg.localeCompare(y.fg));
-  GD.forEach(d=>{ d.hay=norm([d.fg,d.fgn,d.model,d.country,d.color].join(' ')); d.fgN=norm(d.fg); d.mN=norm(d.model); });
+  GD.forEach(d=>{ d.hay=norm([d.fg,d.fgn,d.model,d.country,d.color].join(' ')); d.fgN=norm(d.fg); d.mN=norm(d.model); d.man=manualOf(d.model); if(d.man) d.hay+=' '+norm(d.man.name+' manuel manual repair reparation'); });
   GFG=new Map(GD.map(d=>[d.fgN,d.fg])); GSER=[...new Set(GD.map(d=>d.mN))];
   GDATE=dmax?new Date(dmax).toLocaleDateString('fr-FR'):''; }
 function bomDev(fg){ return 'tineco_bom.html?fg='+encodeURIComponent(fg); }
@@ -368,10 +373,18 @@ function fileCard(f){
          '<div class="pa">'+(f.rel?hl(f.rel.replace(/\//g,' › ')):'Tineco')+'</div></div>'+
          '<div class="dt">'+fmtDate(f.d)+(f.f?'':'<a href="'+esc(f.pu)+'" target="_blank" rel="noopener">📂 dossier</a>')+'</div>'+
          (isBom(f)?'<a class="bomb" href="'+bomLink(f.n)+'" title="Ouvrir la liste de pièces avec les photos">🔍 Lecteur BOM</a>':'')+'</div>'; }
+function devMan(d){
+  let h='';
+  if(d.man){ h+= d.man.url ? '<a class="lk man" href="'+esc(d.man.url)+'" target="_blank" rel="noopener" title="Manuel de réparation (SAVVY)'+(d.man.approx?' — rapprochement approximatif, à vérifier':'')+'">📘 <span>'+esc(d.man.name)+(d.man.approx?' ⚠️':'')+'</span></a>'
+                          : '<span class="lk none">📘 '+esc(d.man.name)+' (lien SAVVY à venir)</span>'; }
+  else h+='<span class="lk none">📘 Pas de manuel référencé</span>';
+  const doc=DOCS.find(x=>x.refs.some(r=>norm(r)===d.fgN));
+  if(doc){ if(doc.man&&doc.man.u&&(!d.man||(doc.man.u!==d.man.url&&norm(doc.man.l)!==norm(d.man.name)))) h+='<a class="lk man" href="'+esc(doc.man.u)+'" target="_blank" rel="noopener">📘 <span>'+esc(doc.man.l)+'</span></a>'; }
+  return h; }
 function devCard(d){
   return '<div class="card doc dev"><div class="top"><span class="nm">'+hl(d.fgn||'(sans nom)')+'</span><span class="badge">'+hl(d.fg)+'</span>'+(d.model?'<span class="badge fm">'+hl(d.model)+'</span>':'')+'</div>'+
     '<div class="meta">'+esc([d.country,d.color,d.status].filter(Boolean).join(' · '))+' — '+d.n+' pièces · 📷 '+d.ph+' photos</div>'+
-    '<div class="links"><a class="lk bom" href="'+bomDev(d.fg)+'">🔧 Pièces détachées &amp; photos</a><button class="lk rel" data-q="'+esc(d.fg)+'" data-tab="par">Voir les pièces ici</button></div></div>'; }
+    '<div class="links">'+devMan(d)+'<a class="lk bom" href="'+bomDev(d.fg)+'">🔧 Pièces détachées &amp; photos</a><button class="lk rel" data-q="'+esc(d.fg)+'" data-tab="par">Voir les pièces ici</button></div></div>'; }
 function partCard(p,i){
   return '<div class="card pcard"><div class="pth'+(p.src?'':' no')+'"'+(p.src?' data-big="'+esc(p.src)+'" data-cap="'+esc(p.en+' — '+p.code)+'" title="Agrandir"':'')+'>'+
     (p.src?'<img src="'+esc(p.src)+'" alt="" referrerpolicy="no-referrer" loading="lazy" onerror="this.parentNode.classList.add(\'no\');this.parentNode.textContent=\'Image indisponible\'">':'Pas de photo')+'</div>'+
