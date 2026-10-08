@@ -37,27 +37,9 @@
           return;
         }
         firebase.initializeApp(window.FIREBASE_CONFIG);
-        var from = encodeURIComponent(location.pathname + location.search);
-        function expulser() {
-          document.documentElement.style.visibility = "hidden";
-          firebase.auth().signOut().then(function () {
-            location.replace(base + "login.html?expired=1&from=" + from);
-          });
-        }
         firebase.auth().onAuthStateChanged(function (user) {
-          if (user && window.hubSessionExpiree && window.hubSessionExpiree(user)) {
-            expulser();
-          } else if (user) {
+          if (user) {
             document.documentElement.style.visibility = "";
-            // Page restée ouverte au-delà de minuit : re-vérification périodique
-            var verif = function () {
-              var u = firebase.auth().currentUser;
-              if (u && window.hubSessionExpiree(u)) expulser();
-            };
-            setInterval(verif, 60000);
-            document.addEventListener("visibilitychange", function () {
-              if (!document.hidden) verif();
-            });
           } else {
             location.replace(base + "login.html?from=" + encodeURIComponent(location.pathname + location.search));
           }
