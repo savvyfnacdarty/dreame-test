@@ -10,7 +10,6 @@
     var foots = document.getElementsByTagName("footer");
     var foot = foots.length ? foots[foots.length - 1] : null;
 
-    if (foot && foot.parentNode !== document.body) document.body.appendChild(foot); // ex. iRobot : footer dans un conteneur étroit
     if (foot) {
       // Le footer existant passe en noir, pleine largeur, collé à la mention
       var s = foot.style;
@@ -86,24 +85,4 @@
     bar.appendChild(w);
   }
   if (document.body) addBtn(); else document.addEventListener("DOMContentLoaded", addBtn);
-})();
-
-// Flèche « remonter en haut de page » sur toutes les pages (sauf celles qui en ont déjà une : Beko).
-(function () {
-  function addTop() {
-    if (document.getElementById("hub-totop") || document.querySelector(".totop")) return;
-    var b = document.createElement("button");
-    b.id = "hub-totop"; b.type = "button"; b.textContent = "↑";
-    b.setAttribute("aria-label", "Haut de page"); b.title = "Haut de page";
-    b.style.cssText = "position:fixed;right:16px;bottom:16px;z-index:9990;width:44px;height:44px;border-radius:50%;border:0;" +
-      "background:#D4151B;color:#fff;font:700 20px/1 system-ui,Arial,sans-serif;box-shadow:0 4px 12px rgba(0,0,0,.3);cursor:pointer;display:none";
-    b.addEventListener("click", function () { window.scrollTo({ top: 0, behavior: "smooth" }); });
-    var st = document.createElement("style");
-    st.textContent = "@media print{#hub-totop{display:none!important}}";
-    document.head.appendChild(st);
-    function upd() { b.style.display = (window.pageYOffset || document.documentElement.scrollTop) > 300 ? "block" : "none"; }
-    window.addEventListener("scroll", upd, { passive: true }); upd();
-    document.body.appendChild(b);
-  }
-  if (document.body) addTop(); else document.addEventListener("DOMContentLoaded", addTop);
 })();
