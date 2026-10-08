@@ -13,11 +13,11 @@
     font-family: 'Segoe UI', system-ui, sans-serif;
     min-height: 100vh;
     display: flex;
-    flex-direction: column; /* carte centrée, bandeau de confidentialité en bas */
+    align-items: center;
+    justify-content: center;
     background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
   }
   .card {
-    margin: auto;
     background: #fff;
     border-radius: 16px;
     padding: 40px 36px;
