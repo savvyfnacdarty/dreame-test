@@ -41,3 +41,48 @@
   }
   if (document.body) add(); else document.addEventListener("DOMContentLoaded", add);
 })();
+
+// Bouton « Confidentialité » dans le bandeau rouge (en haut à droite) + infobulle au survol.
+(function () {
+  var TEXTE = "Usage interne Fnac Darty – Documents constructeurs et SAV réservés aux collaborateurs. " +
+    "Ne pas diffuser, copier ou transmettre à des tiers sans l’accord du constructeur concerné et de Fnac Darty. " +
+    "Documentation propriété des constructeurs, usage SAV uniquement.";
+
+  function addBtn() {
+    if (document.getElementById("hub-info-conf")) return;
+    // Bandeau rouge : selon les pages (index = <header>, autres = .hubbar / .fdtop / .fdbar)
+    var bar = document.querySelector("body > header") || document.querySelector(".hubbar") ||
+      document.querySelector(".fdtop") || document.querySelector(".fdbar .fdin") || document.querySelector(".fdbar");
+    if (!bar) return;
+
+    var st = document.createElement("style");
+    st.textContent =
+      "#hub-info-conf{position:relative;margin-left:auto;flex:0 0 auto;font:600 13px/1 system-ui,Arial,sans-serif;z-index:10000}" +
+      "#hub-info-conf button{display:inline-flex;align-items:center;gap:6px;cursor:help;border:1.5px solid rgba(255,255,255,.85);" +
+      "background:rgba(255,255,255,.12);color:#fff;border-radius:999px;padding:6px 12px;font:inherit}" +
+      "#hub-info-conf button:hover,#hub-info-conf button:focus-visible{background:#fff;color:#b92d28;outline:none}" +
+      "#hub-info-conf .ic{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;" +
+      "border:1.5px solid currentColor;font:700 11px/1 Georgia,serif}" +
+      "#hub-info-conf .tip{display:none;position:absolute;right:0;top:calc(100% + 10px);width:320px;max-width:calc(100vw - 24px);" +
+      "background:#000;color:#fff;padding:12px 14px;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.35);" +
+      "font:400 12.5px/1.5 system-ui,Arial,sans-serif;text-align:left;white-space:normal;cursor:default}" +
+      "#hub-info-conf .tip b{display:block;margin-bottom:4px;color:#EEA31E}" +
+      "#hub-info-conf .tip:before{content:'';position:absolute;right:22px;top:-6px;border:6px solid transparent;border-top:0;border-bottom-color:#000}" +
+      "#hub-info-conf:hover .tip,#hub-info-conf:focus-within .tip,#hub-info-conf.open .tip{display:block}" +
+      "@media (max-width:600px){#hub-info-conf .lbl{display:none}#hub-info-conf button{padding:6px}}" +
+      "@media print{#hub-info-conf{display:none!important}}";
+    document.head.appendChild(st);
+
+    var w = document.createElement("div");
+    w.id = "hub-info-conf";
+    if (bar.querySelector(".qs")) w.style.marginLeft = "0";
+    w.innerHTML = "<button type=\"button\" aria-label=\"Informations de confidentialité\" aria-describedby=\"hub-info-tip\">" +
+      "<span class=\"ic\">i</span><span class=\"lbl\">Confidentialité</span></button>" +
+      "<div class=\"tip\" id=\"hub-info-tip\" role=\"tooltip\"><b>Informations de confidentialité</b>" + TEXTE + "</div>";
+    // Le bandeau peut être un lien (<a>) : le bouton ne doit pas déclencher la navigation
+    w.addEventListener("click", function (e) { e.preventDefault(); e.stopPropagation(); w.classList.toggle("open"); });
+    document.addEventListener("click", function (e) { if (!w.contains(e.target)) w.classList.remove("open"); });
+    bar.appendChild(w);
+  }
+  if (document.body) addBtn(); else document.addEventListener("DOMContentLoaded", addBtn);
+})();
