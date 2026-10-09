@@ -115,6 +115,7 @@ mark{background:var(--lime);color:inherit;padding:0 1px;border-radius:2px;}
     <input id="q" type="text" autocomplete="off" spellcheck="false" placeholder="Ex. FW440300DE, CL2331S-01, S7 Pro, CL2376, brush roller, 9FWBR060000, 114-23761801…" autofocus>
     <button class="clr" id="clr" title="Effacer" aria-label="Effacer">×</button>
   </div>
+  <div class="tip" style="margin-bottom:8px"><a href="tineco_faq.html" style="color:#F7FE8C;font-weight:700">🩺 FAQ panne : trouver les causes possibles à partir du produit et du symptôme client →</a></div>
   <div class="tip">💡 Privilégiez la <b>référence technique</b> de la plaque signalétique : plusieurs documentations peuvent exister pour une même référence commerciale.</div>
 </div>
 
@@ -406,7 +407,7 @@ function ropMan(r,noSp){ const m=r.man; if(!m) return '';
 function ropCard(r){
   const gh=(r.skuN&&GFG.has(r.skuN))?'<a class="lk bom" href="'+bomDev(GFG.get(r.skuN))+'">🔧 Pièces détachées &amp; photos</a>':'';
   return '<div class="card doc rop"><div class="top"><span class="nm">'+hl(r.nm||'(sans nom)')+'</span>'+(r.sku?'<span class="badge">'+hl(r.sku)+'</span>':'')+(r.fm?'<span class="badge fm">'+hl(r.fm)+'</span>':'')+'</div>'+
-    '<div class="meta">SKU · modèle usine (Factory Serial Model)'+(r.note?' · '+esc(r.note):'')+'</div><div class="links">'+ropMan(r)+gh+'</div></div>'; }
+    '<div class="meta">SKU · modèle usine (Factory Serial Model)'+(r.note?' · '+esc(r.note):'')+'</div><div class="links">'+ropMan(r)+gh+(r.skuN?'<a class="lk bom" href="tineco_faq.html?sku='+encodeURIComponent(r.sku)+'" title="Causes possibles selon le symptôme (Repair Guide)">🩺 FAQ panne</a>':'')+'</div></div>'; }
 function relatedCount(fm){ if(!fm) return 0; const t=norm(fm); return SAV.filter(f=>!f.f&&f.hay.includes(t)).length; }
 
 /* ---------- affichage ---------- */
@@ -439,7 +440,7 @@ function devMan(d){
 function devCard(d){
   return '<div class="card doc dev"><div class="top"><span class="nm">'+hl(d.fgn||'(sans nom)')+'</span><span class="badge">'+hl(d.fg)+'</span>'+(d.model?'<span class="badge fm">'+hl(d.model)+'</span>':'')+'</div>'+
     '<div class="meta">'+esc([d.country,d.color,d.status].filter(Boolean).join(' · '))+' — '+d.n+' pièces · 📷 '+d.ph+' photos</div>'+
-    '<div class="links">'+devMan(d)+'<a class="lk bom" href="'+bomDev(d.fg)+'">🔧 Pièces détachées &amp; photos</a><button class="lk rel" data-q="'+esc(d.fg)+'" data-tab="par">Voir les pièces ici</button></div></div>'; }
+    '<div class="links">'+devMan(d)+(ROPSKU.has(d.fgN)?'<a class="lk bom" href="tineco_faq.html?sku='+encodeURIComponent(d.fg)+'" title="Causes possibles selon le symptôme (Repair Guide)">🩺 FAQ panne</a>':'')+'<a class="lk bom" href="'+bomDev(d.fg)+'">🔧 Pièces détachées &amp; photos</a><button class="lk rel" data-q="'+esc(d.fg)+'" data-tab="par">Voir les pièces ici</button></div></div>'; }
 function partCard(p,i){
   return '<div class="card pcard"><div class="pth'+(p.src?'':' no')+'"'+(p.src?' data-big="'+esc(p.src)+'" data-cap="'+esc(p.en+' — '+p.code)+'" title="Agrandir"':'')+'>'+
     (p.src?'<img src="'+esc(p.src)+'" alt="" referrerpolicy="no-referrer" loading="lazy" onerror="this.parentNode.classList.add(\'no\');this.parentNode.textContent=\'Image indisponible\'">':'Pas de photo')+'</div>'+
