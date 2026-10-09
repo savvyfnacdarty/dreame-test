@@ -133,6 +133,7 @@ mark{background:var(--lime);color:inherit;padding:0 1px;border-radius:2px;}
 <script src="Tineco/data/cn_fr_glossaire.js"></script>
 <script src="Tineco/data/tineco_manuels.js"></script>
 <script src="Tineco/data/tineco_range_of_product.js"></script>
+<script src="Tineco/data/tineco_manuels_hub.js"></script>
 <script>
 /* =====================================================================
    Tineco — recherche dans les 2 fichiers Excel du dossier Tineco/data/ :
@@ -396,10 +397,12 @@ function ropUrl(m){ /* lien SAVVY du manuel : cherché par nom de fichier dans l
   const t=norm(m.n+'.docx'); let best=null;
   for(const f of SAV){ if(f.f||f.nN!==t) continue; if(!best||norm(f.rel)==='repair manual 1 repair manual') best=f; }
   return m._r=best?best.u:''; }
-function ropMan(r){ const m=r.man; if(!m) return '';
+function ropHub(m){ const h=(typeof MANUAL_HUB!=='undefined'&&m)?MANUAL_HUB[m.n]:''; return h?'<a class="lk man hub" href="'+esc(h)+'" title="Lire le manuel directement dans le hub (traduction possible)">📖 <span>Lire dans le hub · traduire</span></a>':''; }
+function ropMan(r,noSp){ const m=r.man; if(!m) return '';
+  if(noSp) return ropHub(m);
   const u=ropUrl(m), fb=!u&&m.u, url=u||m.u;
-  return url ? '<a class="lk man" href="'+esc(url)+'" target="_blank" rel="noopener" title="Manuel de réparation (SAVVY)'+(fb&&m.a?' — rapprochement approximatif (nom du fichier modifié), à vérifier':'')+'">📘 <span>'+esc(m.n)+(fb&&m.a?' ⚠️':'')+'</span></a>'
-              : '<span class="lk none">📘 '+esc(m.n)+' (fichier absent de l\'export SAVVY)</span>'; }
+  return (url ? '<a class="lk man" href="'+esc(url)+'" target="_blank" rel="noopener" title="Manuel de réparation (SAVVY)'+(fb&&m.a?' — rapprochement approximatif (nom du fichier modifié), à vérifier':'')+'">📘 <span>'+esc(m.n)+(fb&&m.a?' ⚠️':'')+'</span></a>'
+              : '<span class="lk none">📘 '+esc(m.n)+' (fichier absent de l\'export SAVVY)</span>')+ropHub(m); }
 function ropCard(r){
   const gh=(r.skuN&&GFG.has(r.skuN))?'<a class="lk bom" href="'+bomDev(GFG.get(r.skuN))+'">🔧 Pièces détachées &amp; photos</a>':'';
   return '<div class="card doc rop"><div class="top"><span class="nm">'+hl(r.nm||'(sans nom)')+'</span>'+(r.sku?'<span class="badge">'+hl(r.sku)+'</span>':'')+(r.fm?'<span class="badge fm">'+hl(r.fm)+'</span>':'')+'</div>'+
@@ -413,7 +416,7 @@ function docCard(d){
   links += d.man ? (d.man.u?'<a class="lk man" href="'+esc(d.man.u)+'" target="_blank" rel="noopener">📘 <span>'+hl(d.man.l)+'</span></a>':'<span class="lk none">📘 '+esc(d.man.l)+'</span>')
                  : '<span class="lk none">📘 Pas de manuel référencé</span>';
   const seenU=new Set(d.man&&d.man.u?[d.man.u]:[]), seenN=new Set(d.man?[d.man.l]:[]);
-  for(const rn of d.refsN){ const hits=ROPD.filter(x=>x.skuN===rn.replace(/ /g,'')||x.fmN===rn); for(const x of hits){ const m=x.man; const key=ropUrl(m)||m.u||m.n; if(seenU.has(key)||seenN.has(m.n)) continue; seenU.add(key); links+=ropMan(x); } }
+  for(const rn of d.refsN){ const hits=ROPD.filter(x=>x.skuN===rn.replace(/ /g,'')||x.fmN===rn); for(const x of hits){ const m=x.man; const key=ropUrl(m)||m.u||m.n; if(seenU.has(key)||seenN.has(m.n)){ if(!seenU.has('hub'+m.n)){ seenU.add('hub'+m.n); links+=ropMan(x,1); } continue; } seenU.add(key); seenU.add('hub'+m.n); links+=ropMan(x); } }
   const gh=GFG.size?globalHref(d.refs):'';
   if(gh) links += '<a class="lk bom" href="'+gh+'" title="Liste de pièces détachées EU avec photos (Global spare parts list)">🔧 Pièces détachées &amp; photos</a>';
   return '<div class="card doc"><div class="top"><span class="nm">'+hl(d.com)+'</span>'+(d.fam?'<span class="badge">'+esc(d.fam)+'</span>':'')+(d.fm?'<span class="badge fm">'+hl(d.fm)+'</span>':'')+'</div>'+
@@ -429,7 +432,7 @@ function devMan(d){
   if(d.man){ h+= d.man.url ? '<a class="lk man" href="'+esc(d.man.url)+'" target="_blank" rel="noopener" title="Manuel de réparation (SAVVY)'+(d.man.approx?' — rapprochement approximatif, à vérifier':'')+'">📘 <span>'+esc(d.man.name)+(d.man.approx?' ⚠️':'')+'</span></a>'
                           : '<span class="lk none">📘 '+esc(d.man.name)+' (lien SAVVY à venir)</span>'; }
   else h+='<span class="lk none">📘 Pas de manuel référencé</span>';
-  const rp=ROPSKU.get(d.fgN); if(rp&&rp.man){ const ru=ropUrl(rp.man)||rp.man.u; if(!d.man||!ru||ru!==d.man.url) h+=ropMan(rp); }
+  const rp=ROPSKU.get(d.fgN); if(rp&&rp.man){ const ru=ropUrl(rp.man)||rp.man.u; h+=ropMan(rp,!!(d.man&&ru&&ru===d.man.url)); }
   const doc=DOCS.find(x=>x.refs.some(r=>norm(r)===d.fgN));
   if(doc){ if(doc.man&&doc.man.u&&(!d.man||(doc.man.u!==d.man.url&&norm(doc.man.l)!==norm(d.man.name)))) h+='<a class="lk man" href="'+esc(doc.man.u)+'" target="_blank" rel="noopener">📘 <span>'+esc(doc.man.l)+'</span></a>'; }
   return h; }
