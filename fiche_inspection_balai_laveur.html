@@ -100,8 +100,91 @@ input[type=date].box{width:36mm;flex:none}
  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
 @media screen and (max-width:800px){.page{width:auto;padding:5mm}.row{grid-template-columns:1fr}.opts{grid-template-columns:1fr 1fr}.recu{grid-template-columns:1fr 1fr}.ident{grid-template-columns:1fr}.ident label.f.w2,.ident label.f.w3{grid-column:auto}}
+
+/* ---- N° de série : grand champ (smartphone) + QR ---- */
+#snInp{height:11mm;font-size:15pt;font-weight:bold;letter-spacing:.4px}
+.ident .sn .btn{flex:none}
+#qrOv{display:none;position:fixed;inset:0;z-index:99;background:rgba(0,0,0,.92);flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:12px}
+#qrOv video{width:100%;max-width:520px;max-height:62vh;border:3px solid var(--orange);border-radius:8px;background:#000;object-fit:cover}
+#qrOv .qrst{color:#fff;font-size:15px;text-align:center}
+#qrOv button{background:#666;color:#fff;border:0;border-radius:6px;padding:12px 26px;font-size:16px;font-weight:bold}
+@media screen and (max-width:800px){
+ #snInp{height:16mm;font-size:22px;padding:2mm 3mm;border:2px solid var(--orange);letter-spacing:.8px}
+ .ident .sn{flex-direction:column;align-items:stretch;gap:2.5mm}
+ .ident .sn>label.f{flex-direction:column;align-items:stretch;gap:1.5mm;font-size:12pt}
+ .ident .sn .btn{justify-content:center;font-size:13pt;padding:3.2mm 4mm}
+ .snres{font-size:11pt}.chip{font-size:12pt;padding:1.2mm 3.5mm}
+}
+@media print{#qrOv,#snQr{display:none!important}#snInp{height:8mm;font-size:11pt}}
+
+/* ---- bloc identification : plus de débordement ---- */
+.ident>*{min-width:0}
+.ident{grid-template-columns:repeat(3,minmax(0,1fr))}
+.ident label.f{min-width:0}
+.ident input.box{max-width:100%}
+@media screen and (max-width:800px){
+ .ident{grid-template-columns:minmax(0,1fr)}
+ .ident label.f{flex-direction:column;align-items:stretch;gap:1.5mm;font-size:12pt}
+ .ident input.box{width:100%;height:13mm;font-size:18px;padding:2mm 3mm}
+ .ident input[type=date].box{width:100%;-webkit-appearance:none;appearance:none;min-width:0}
+ .ident .sn>label.f input.box{height:16mm}
+}
+
+/* ---- N° de série : pleine largeur, boutons sous le champ ---- */
+.ident .sn{grid-column:1/-1;flex-wrap:wrap;gap:2.5mm 3mm}
+.ident .sn>label.f:first-child{flex:1 1 100%;white-space:nowrap}
+.ident .sn>label.f:first-child input.box{min-width:0}
+.ident .sn .btn{flex:0 0 auto}
+@media screen and (max-width:800px){.ident .sn>label.f:first-child{white-space:normal}}
+@media print{.ident .sn{flex-wrap:nowrap}.ident .sn>label.f:first-child{flex:1 1 auto}}
+
+/* ---- Éléments reçus : Présent / Absent (prise en charge comptoir) ---- */
+.recu{display:grid;grid-template-columns:1fr 1fr;gap:1mm 8mm;margin:1mm 0 3mm}
+.rc{display:flex;align-items:center;gap:3mm;border-bottom:1px dotted var(--line);padding:.8mm 0;break-inside:avoid}
+.rc .rn{flex:1;font-size:10pt;font-weight:bold;min-width:0}
+.rc .cb{margin:0;font-size:9.5pt}
+.rc .ab input:checked ~ span{color:var(--red);font-weight:bold}
+.rc .pr input:checked ~ span{font-weight:bold}
+.rc .ab input:checked + i{border-color:var(--red)}
+.rcall{margin:0 0 1.5mm;font-size:9pt;padding:1mm 3mm}
+.obs textarea{height:24mm}
+@media screen and (max-width:800px){
+ .recu{grid-template-columns:minmax(0,1fr)}
+ .rc{padding:2.2mm 0;gap:4mm}.rc .rn{font-size:12pt}
+ .rc .cb{font-size:12pt;gap:2.4mm;padding:1mm 2mm}
+ .rc .cb i{width:6mm;height:6mm}
+ .rc .cb input:checked + i::after{left:1.3mm;top:-.6mm;width:2mm;height:4.6mm}
+ .obs textarea{height:34mm;font-size:16px}
+}
+@media print{.rcall{display:none!important}}
+
+/* ---- Symptôme de panne ---- */
+.sympt{margin:2mm 0 1mm}
+.sympt label{display:block;font-weight:bold;font-size:10pt;margin-bottom:1mm}
+.sympt textarea{height:16mm}
+@media screen and (max-width:800px){.sympt label{font-size:12pt}.sympt textarea{height:30mm;font-size:16px}}
+
+/* ---- Recherche FAQ / résolution de panne ---- */
+.faqbtn{margin:1.5mm 0 0;font-size:10pt;padding:2mm 4mm;border:0}
+#faqPanel{display:none;border:1.5px solid var(--orange);border-radius:3px;background:#fffaf2;padding:3mm 4mm;margin:2mm 0 3mm}
+#faqPanel h4{margin:2mm 0 1mm;font-size:9.5pt;color:var(--red)}
+#faqPanel .fch{display:inline-block;border:1px solid var(--orange);background:#fff;color:#333;border-radius:12px;padding:.8mm 3mm;margin:.6mm 1.2mm .6mm 0;font:inherit;font-size:9.5pt;cursor:pointer}
+#faqPanel .fch.on{background:var(--orange);color:#fff;font-weight:bold}
+#faqPanel input.fq{width:100%;border:1px solid var(--line);border-radius:2px;padding:1.6mm 2mm;font:inherit;font-size:11pt;height:9mm;margin:1mm 0 2mm}
+#faqPanel .fl{display:flex;flex-wrap:wrap;gap:2mm}
+#faqPanel .fl a{background:var(--red);color:#fff;text-decoration:none;font-weight:bold;font-size:10pt;padding:2mm 4mm;border-radius:2mm}
+#faqPanel .fl a.sec{background:#666}
+#faqPanel .fnote{font-size:9pt;color:var(--grey);margin-top:1.5mm}
+@media screen and (max-width:800px){
+ .faqbtn{font-size:13pt;padding:3.2mm 4mm;width:100%;justify-content:center}
+ #faqPanel .fch{font-size:12pt;padding:1.6mm 3.5mm}
+ #faqPanel input.fq{font-size:16px;height:13mm}
+ #faqPanel .fl a{font-size:12pt;padding:3mm 4mm;flex:1 1 100%;text-align:center}
+}
+@media print{.faqbtn,#faqPanel{display:none!important}}
 </style></head>
 <body>
+<div id="qrOv"><video id="qrVid" playsinline muted></video><div class="qrst" id="qrSt"></div><button type="button" id="qrClose">Fermer</button></div>
 <div class="toolbar"><button onclick="window.print()">Imprimer / PDF</button><button onclick="saveFile()">&#128190; Enregistrer</button><label class="tb">&#128194; Ouvrir<input type="file" id="openFile" accept=".json,application/json" hidden></label><button class="sec" onclick="resetAll()">Réinitialiser</button><span id="msg">Cases cliquables · repères sur schéma · photos · signatures</span></div>
 
 <div class="page" id="p1">
@@ -115,16 +198,22 @@ input[type=date].box{width:36mm;flex:none}
   <label class="f">Date : <input class="box" type="date"></label>
   <label class="f">Modèle : <input class="box" type="text" placeholder="ex. Floor One S7"></label>
   <div class="f w2 sn"><label class="f" style="flex:1">N° de série : <input class="box" type="text" id="snInp" autocomplete="off"></label>
-  <label class="btn snbtn">&#128247; Scanner l'étiquette<input id="snCam" type="file" accept="image/*" capture="environment" hidden></label></div>
+  <button type="button" class="btn snbtn" id="snQr">&#9638; Scanner le QR code</button>
+  <label class="btn snbtn sec">&#128247; Photo de l'étiquette<input id="snCam" type="file" accept="image/*" capture="environment" hidden></label></div>
 <div class="w3 snres" id="snRes"></div>
 </div>
 <div style="font-weight:bold;font-size:10pt">Marque :</div>
 <div class="brands"><label class="cb "><input type="checkbox"><i></i><span>Tineco</span></label><label class="cb "><input type="checkbox"><i></i><span>Dreame</span></label><label class="cb "><input type="checkbox"><i></i><span>Roborock</span></label><label class="cb "><input type="checkbox"><i></i><span>Narwal</span></label><label class="cb "><input type="checkbox"><i></i><span>Bissell</span></label><label class="cb "><input type="checkbox"><i></i><span>Kärcher</span></label><label class="cb "><input type="checkbox"><i></i><span>Philips</span></label><label class="cb "><input type="checkbox"><i></i><span>Shark</span></label><label class="cb autre"><input type="checkbox"><i></i><span>Autre :</span><input class="line" type="text" style="width:26mm"></label></div>
 
+<div class="sympt"><label for="symp">Symptôme de panne (déclaré par le client) :</label><textarea id="symp" placeholder="ex. ne démarre plus, ne charge pas, code erreur, fuite d'eau…"></textarea></div>
+<button type="button" class="btn faqbtn" id="faqBtn">&#128270; Chercher dans la FAQ (résolution de panne)</button>
+<div id="faqPanel"></div>
+
 <div class="warn">Tout défaut d'entretien peut entraîner une exclusion de garantie et l'émission d'un devis.</div>
 
 <h2>Éléments reçus avec le produit</h2>
-<div class="recu"><label class="cb "><input type="checkbox"><i></i><span>Balai (corps + poignée)</span></label><label class="cb "><input type="checkbox"><i></i><span>Tête / rouleau brosse</span></label><label class="cb "><input type="checkbox"><i></i><span>Réservoir eau propre</span></label><label class="cb "><input type="checkbox"><i></i><span>Réservoir eau sale / bac</span></label><label class="cb "><input type="checkbox"><i></i><span>Batterie</span></label><label class="cb "><input type="checkbox"><i></i><span>Chargeur / station</span></label><label class="cb "><input type="checkbox"><i></i><span>Filtre</span></label><label class="cb "><input type="checkbox"><i></i><span>Accessoires / embouts</span></label><label class="cb "><input type="checkbox"><i></i><span>Produit nettoyant</span></label></div>
+<button type="button" class="btn sec rcall" id="rcAll">&#10003; Tout présent</button>
+<div class="recu"><div class="rc"><span class="rn">Balai (corps + poignée)</span><label class="cb pr"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Tête / rouleau brosse</span><label class="cb pr"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Réservoir eau propre</span><label class="cb pr"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Réservoir eau sale / bac</span><label class="cb pr"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Batterie</span><label class="cb pr"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Chargeur / station</span><label class="cb pr"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Filtre</span><label class="cb pr"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Accessoires / embouts</span><label class="cb pr"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Produit nettoyant</span><label class="cb pr"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab"><input type="checkbox"><i></i><span>Absent</span></label></div></div>
 
 <h2>Schéma global <em>(À compléter si nécessaire — cliquer sur le schéma pour repérer un défaut, re-cliquer sur le repère pour le retirer)</em></h2>
 <div class="views">
@@ -169,9 +258,12 @@ input[type=date].box{width:36mm;flex:none}
   </div>
 </div>
 
+<div class="obs"><h2>Observations <em>(décrire les repères du schéma : n° → défaut)</em></h2>
+<textarea></textarea></div>
+
 <div class="rows"><section class="row"><div class="icol"><div class="ico"><svg viewBox="0 0 60 48"><rect x="14" y="6" width="32" height="36" rx="5" fill="none" stroke="#444" stroke-width="2"/><rect x="24" y="2" width="12" height="5" fill="#444"/><path d="M16 26q4-4 7 0t7 0 7 0 7 0v14H16z" fill="#9cc4e4" stroke="#444" stroke-width="1.5"/></svg></div><label class="btn rowcam" data-sec="RÉSERVOIRS & CIRCUIT D'EAU">&#128247;<span class="n"></span><input type="file" accept="image/*" capture="environment" hidden></label></div>
 <div class="txt"><h3>RÉSERVOIRS & CIRCUIT D'EAU</h3><p>Vérifier réservoir d'eau propre, bac eau sale, bouchons/joints, buses et pompe : calcaire, moisissure, produit non conforme, fuite.</p></div>
-<div class="opts g3"><div class="grp"><div class="gt">Réservoir eau propre</div><label class="cb "><input type="checkbox"><i></i><span>OK</span></label><label class="cb "><input type="checkbox"><i></i><span>Calcaire / dépôts</span></label><label class="cb "><input type="checkbox"><i></i><span>Moisissure / odeur</span></label><label class="cb "><input type="checkbox"><i></i><span>Fissuré / cassé</span></label><label class="cb "><input type="checkbox"><i></i><span>Bouchon / joint absent</span></label><label class="cb nc"><input type="checkbox"><i></i><span>Non concerné / non visible</span></label></div><div class="grp"><div class="gt">Réservoir eau sale</div><label class="cb "><input type="checkbox"><i></i><span>OK</span></label><label class="cb "><input type="checkbox"><i></i><span>Sale / non vidé</span></label><label class="cb "><input type="checkbox"><i></i><span>Odeur / moisissure</span></label><label class="cb "><input type="checkbox"><i></i><span>Fissuré / absent</span></label><label class="cb nc"><input type="checkbox"><i></i><span>Non concerné / non visible</span></label></div><div class="grp"><div class="gt">Pompe / buses / produit</div><label class="cb "><input type="checkbox"><i></i><span>OK</span></label><label class="cb "><input type="checkbox"><i></i><span>Buses obstruées</span></label><label class="cb "><input type="checkbox"><i></i><span>Fuite visible</span></label><label class="cb "><input type="checkbox"><i></i><span>Pas d'eau distribuée</span></label><label class="cb "><input type="checkbox"><i></i><span>Détergent non conforme</span></label><label class="cb nc"><input type="checkbox"><i></i><span>Non concerné / non visible</span></label></div></div></section><section class="row"><div class="icol"><div class="ico"><svg viewBox="0 0 60 48"><rect x="6" y="18" width="48" height="12" rx="6" fill="#d8d8d8" stroke="#444" stroke-width="2"/><path d="M12 18l-2-6M20 18l-1-7M28 18v-8M36 18l1-7M44 18l2-6M12 30l-2 6M20 30l-1 7M28 30v8M36 30l1 7M44 30l2 6" stroke="#444" stroke-width="2" stroke-linecap="round"/></svg></div><label class="btn rowcam" data-sec="ROULEAU BROSSE & TÊTE DE LAVAGE">&#128247;<span class="n"></span><input type="file" accept="image/*" capture="environment" hidden></label></div>
+<div class="opts g3"><div class="grp"><div class="gt">Réservoir eau propre</div><label class="cb "><input type="checkbox"><i></i><span>Présent</span></label><label class="cb "><input type="checkbox"><i></i><span>Calcaire / dépôts</span></label><label class="cb "><input type="checkbox"><i></i><span>Moisissure / odeur</span></label><label class="cb "><input type="checkbox"><i></i><span>Fissuré / cassé</span></label><label class="cb "><input type="checkbox"><i></i><span>Bouchon / joint absent</span></label><label class="cb nc"><input type="checkbox"><i></i><span>Non concerné / non visible</span></label></div><div class="grp"><div class="gt">Réservoir eau sale</div><label class="cb "><input type="checkbox"><i></i><span>Présent</span></label><label class="cb "><input type="checkbox"><i></i><span>Sale / non vidé</span></label><label class="cb "><input type="checkbox"><i></i><span>Odeur / moisissure</span></label><label class="cb "><input type="checkbox"><i></i><span>Fissuré / absent</span></label><label class="cb nc"><input type="checkbox"><i></i><span>Non concerné / non visible</span></label></div><div class="grp"><div class="gt">Réservoir détergent</div><label class="cb "><input type="checkbox"><i></i><span>Présent</span></label><label class="cb "><input type="checkbox"><i></i><span>Absent</span></label><label class="cb "><input type="checkbox"><i></i><span>Fuite visible</span></label><label class="cb "><input type="checkbox"><i></i><span>Fissuré / cassé</span></label><label class="cb "><input type="checkbox"><i></i><span>Bouchon / joint absent</span></label><label class="cb "><input type="checkbox"><i></i><span>Détergent non conforme</span></label><label class="cb "><input type="checkbox"><i></i><span>Non concerné / non visible</span></label></div></div></section><section class="row"><div class="icol"><div class="ico"><svg viewBox="0 0 60 48"><rect x="6" y="18" width="48" height="12" rx="6" fill="#d8d8d8" stroke="#444" stroke-width="2"/><path d="M12 18l-2-6M20 18l-1-7M28 18v-8M36 18l1-7M44 18l2-6M12 30l-2 6M20 30l-1 7M28 30v8M36 30l1 7M44 30l2 6" stroke="#444" stroke-width="2" stroke-linecap="round"/></svg></div><label class="btn rowcam" data-sec="ROULEAU BROSSE & TÊTE DE LAVAGE">&#128247;<span class="n"></span><input type="file" accept="image/*" capture="environment" hidden></label></div>
 <div class="txt"><h3>ROULEAU BROSSE & TÊTE DE LAVAGE</h3><p>Contrôler le rouleau (cheveux, fils, usure), la raclette, les lames et la rotation libre de la tête de nettoyage.</p></div>
 <div class="opts"><div class="grp"><div class="gt">Rouleau brosse</div><label class="cb "><input type="checkbox"><i></i><span>Propre / libre</span></label><label class="cb "><input type="checkbox"><i></i><span>Cheveux / fils enroulés</span></label><label class="cb "><input type="checkbox"><i></i><span>Usé / déchiré</span></label><label class="cb "><input type="checkbox"><i></i><span>Moisi / odeur</span></label><label class="cb "><input type="checkbox"><i></i><span>Absent / mal monté</span></label><label class="cb nc"><input type="checkbox"><i></i><span>Non concerné / non visible</span></label></div><div class="grp"><div class="gt">Tête de nettoyage</div><label class="cb "><input type="checkbox"><i></i><span>Rotation libre</span></label><label class="cb "><input type="checkbox"><i></i><span>Bloquée / grippée</span></label><label class="cb "><input type="checkbox"><i></i><span>Raclette / lame usée</span></label><label class="cb "><input type="checkbox"><i></i><span>Capot ou fixation cassés</span></label><label class="cb nc"><input type="checkbox"><i></i><span>Non concerné / non visible</span></label></div></div></section><section class="row"><div class="icol"><div class="ico"><svg viewBox="0 0 60 48"><path d="M12 10h36l-5 32H17z" fill="#f2f2f2" stroke="#444" stroke-width="2"/><rect x="10" y="6" width="40" height="5" rx="2" fill="#444"/><path d="M22 18v18M30 18v18M38 18v18" stroke="#999" stroke-width="2"/></svg></div><label class="btn rowcam" data-sec="BAC À SALETÉS & FILTRES">&#128247;<span class="n"></span><input type="file" accept="image/*" capture="environment" hidden></label></div>
 <div class="txt"><h3>BAC À SALETÉS & FILTRES</h3><p>Vérifier l'encrassement du bac de récupération, du séparateur et du filtre, et l'absence d'obstruction du conduit d'aspiration.</p></div>
@@ -194,9 +286,6 @@ input[type=date].box{width:36mm;flex:none}
   <label class="cb"><input type="checkbox"><i></i><span>Défaut d'entretien avéré — exclusion de garantie / émission d'un devis</span></label>
   <label class="cb"><input type="checkbox"><i></i><span>Dommage non couvert (choc, chute, liquide, ouverture, oxydation)</span></label>
 </div>
-
-<h2>Observations <em>(décrire les repères du schéma : n° → défaut)</em></h2>
-<textarea></textarea>
 
 <div style="margin-top:3mm;display:flex;gap:6mm;align-items:center;flex-wrap:wrap">
   <label class="cb"><input type="checkbox" id="phChk"><i></i><span>Photos jointes au dossier</span></label>
@@ -291,10 +380,13 @@ document.getElementById('snCam').addEventListener('change',function(e){
     addPhotoData(toCanvas(o.im,1400).toDataURL('image/jpeg',.8),'Étiquette N° de série');
     var cands=[],pBar=Promise.resolve();
     if('BarcodeDetector' in window){
-      pBar=new BarcodeDetector().detect(o.im).then(function(r){r.forEach(function(x){if(x.rawValue)cands.push(x.rawValue.trim().toUpperCase());});}).catch(function(){});
+      pBar=new BarcodeDetector().detect(o.im).then(function(r){r.forEach(function(x){if(x.rawValue)cands.push(snFromQr(x.rawValue));});}).catch(function(){});
     }
     return pBar.then(function(){
-      return loadTess().then(function(){
+      if(cands.length)return;
+      return qrFromImg(o.im).then(function(v){if(v)cands.push(snFromQr(v));});
+    }).then(function(){
+      return cands.length?null:loadTess().then(function(){
         return Tesseract.recognize(toCanvas(o.im,2000,true),'eng');
       }).then(function(r){parseSerials(r.data.text).forEach(function(s){if(cands.indexOf(s)<0)cands.push(s);});
       },function(){return 'noocr';});
@@ -306,6 +398,127 @@ document.getElementById('snCam').addEventListener('change',function(e){
     });
   }).catch(function(){showSerials([],'Image illisible.',true);});
 });
+
+/* ---- QR code : lecture directe (caméra) et sur photo ---- */
+function snFromQr(v){
+  v=String(v||'').trim();
+  try{var u=new URL(v),found='';
+    u.searchParams.forEach(function(val,k){if(!found&&/^(sn|s\/n|serial|serialno|serialnumber|serial_number|numero_serie)$/i.test(k))found=val;});
+    if(found)return found.toUpperCase();
+    var last=u.pathname.split('/').filter(Boolean).pop();
+    if(last&&last.length>=6&&/\d/.test(last))return decodeURIComponent(last).toUpperCase();
+  }catch(e){}
+  var m=/(?:S\s*\/?\s*N|SERIAL(?:\s*(?:NO|NUMBER|N°))?|N\s*°?\s*DE\s*S[ÉE]RIE)\s*[:#=.\-]?\s*([A-Z0-9][A-Z0-9\-]{3,})/i.exec(v);
+  if(m)return m[1].toUpperCase();
+  if(/^[A-Za-z0-9\-_.\/]{4,40}$/.test(v))return v.toUpperCase();
+  var l=parseSerials(v);return l.length?l[0]:v.toUpperCase();
+}
+function loadJsQR(){return new Promise(function(res,rej){
+  if(window.jsQR)return res();
+  var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js';
+  s.onload=res;s.onerror=function(){rej(new Error('offline'))};document.head.appendChild(s);});}
+function qrFromImg(im){
+  return loadJsQR().then(function(){
+    var c=toCanvas(im,1600),x=c.getContext('2d'),d=x.getImageData(0,0,c.width,c.height);
+    var r=jsQR(d.data,d.width,d.height,{inversionAttempts:'attemptBoth'});return r?r.data:null;
+  }).catch(function(){return null;});
+}
+var qrStream=null,qrRun=false;
+function qrStop(){qrRun=false;if(qrStream){qrStream.getTracks().forEach(function(t){t.stop();});qrStream=null;}
+  document.getElementById('qrOv').style.display='none';}
+function qrStart(){
+  var ov=document.getElementById('qrOv'),vd=document.getElementById('qrVid'),st=document.getElementById('qrSt'),inp=document.getElementById('snInp');
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){showSerials([],'Caméra indisponible : utilisez « Photo de l\'étiquette ».',true);return;}
+  ov.style.display='flex';st.textContent='Cadrez le QR code de l\'étiquette…';
+  navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false}).then(function(s){
+    qrStream=s;vd.srcObject=s;vd.play();qrRun=true;
+    var det=null;try{if('BarcodeDetector' in window)det=new BarcodeDetector({formats:['qr_code','data_matrix','code_128','code_39','ean_13']});}catch(e){det=null;}
+    var cv=document.createElement('canvas'),cx=cv.getContext('2d',{willReadFrequently:true});
+    (det?Promise.resolve():loadJsQR().catch(function(){return null;})).then(function(){
+      (function tick(){
+        if(!qrRun)return;
+        if(vd.readyState<2||!vd.videoWidth){requestAnimationFrame(tick);return;}
+        var p;
+        if(det){p=det.detect(vd).then(function(r){return r.length?r[0].rawValue:null;}).catch(function(){return null;});}
+        else if(window.jsQR){var sc=Math.min(1,720/vd.videoWidth);cv.width=Math.round(vd.videoWidth*sc);cv.height=Math.round(vd.videoHeight*sc);
+          cx.drawImage(vd,0,0,cv.width,cv.height);var d=cx.getImageData(0,0,cv.width,cv.height);
+          var c=jsQR(d.data,d.width,d.height,{inversionAttempts:'attemptBoth'});p=Promise.resolve(c?c.data:null);}
+        else{st.textContent='Lecteur QR indisponible (connexion requise) : utilisez « Photo de l\'étiquette ».';return;}
+        p.then(function(v){
+          if(!qrRun)return;
+          if(v){var sn=snFromQr(v);qrStop();inp.value=sn;inp.dispatchEvent(new Event('input',{bubbles:true}));
+            showSerials([],'QR lu : '+sn+(sn!==String(v).trim().toUpperCase()?' (contenu : '+String(v).slice(0,80)+')':'')+' — vérifiez le numéro.');
+            if(navigator.vibrate)navigator.vibrate(80);}
+          else setTimeout(function(){requestAnimationFrame(tick);},100);
+        });
+      })();
+    });
+  }).catch(function(){qrStop();showSerials([],'Accès à la caméra refusé : autorisez-le, ou utilisez « Photo de l\'étiquette ».',true);});
+}
+document.getElementById('snQr').addEventListener('click',qrStart);
+document.getElementById('qrClose').addEventListener('click',qrStop);
+
+/* ---- Présent / Absent : exclusifs ---- */
+document.querySelectorAll('.rc input').forEach(function(c){
+  c.addEventListener('change',function(){
+    if(c.checked){var o=c.closest('.rc').querySelectorAll('input');o.forEach(function(x){if(x!==c)x.checked=false;});}
+  });
+});
+var rcAll=document.getElementById('rcAll');
+if(rcAll)rcAll.addEventListener('click',function(){
+  document.querySelectorAll('.rc').forEach(function(r){var i=r.querySelectorAll('input');i[0].checked=true;i[1].checked=false;});
+});
+
+/* ---- Recherche FAQ / résolution de panne (hub constructeurs) ---- */
+(function(){
+var TYPE='balai';
+var FAQS={
+ robot:[{b:/dreame|mova/i,n:'FAQ Robots Dreame / Mova',u:'dreame_sav/faq_robot.html'},{b:/roborock/i,n:'FAQ Roborock',u:'FAQ_Roborock/faq_roborock.html'},{b:/irobot/i,n:'FAQ iRobot',u:'iRobot/FAQ_IROBOT_Support_FR.html'}],
+ balai:[{b:/dreame/i,n:'FAQ Balais laveurs Dreame',u:'dreame_sav/faq_pem.html'},{b:/tineco/i,n:'FAQ panne Tineco',u:'tineco_faq.html'},{b:/roborock/i,n:'FAQ Roborock (Dyad…)',u:'FAQ_Roborock/faq_roborock.html'}]
+};
+var CODES={b:/dreame|mova/i,n:'Codes défaut Dreame',u:'dreame_sav/index_fault_codes.html'};
+var STOP=/^(les?|la|des?|du|un|une|et|ou|en|au|aux|sur|sous|dans|avec|sans|pour|par|pas|plus|que|qui|quoi|est|sont|fait|fais|il|elle|ne|se|sa|son|ses|mon|ma|mes|ce|cet|cette|ces|ça|cela|tout|tres|très|quand|lors|apres|après|avant|depuis|puis|mais|donc|the|and|non|concern[eé]|visible|absent|présent|present)$/i;
+var POS=/^(ok|présent|propres?|libres?|intact|fixée|alimenté|station alimentée|tourelle libre|pare-chocs libre|complets|cycle effectué|sac \/ bac vide|rotation libre|bac de lavage propre|non concerné|propre \/ libre|fixée \/ ok)/i;
+function kw(s){var seen={},o=[];(String(s||'').toLowerCase().split(/[^a-zà-ÿ0-9]+/)||[]).forEach(function(w){
+  if(!w||STOP.test(w)||(w.length<3&&!/\d/.test(w))||seen[w])return;seen[w]=1;o.push(w);});return o;}
+function modelInput(){var l=Array.prototype.find.call(document.querySelectorAll('.ident label.f'),function(x){return /^Mod[èe]le/.test(x.textContent.trim());});return l?l.querySelector('input'):null;}
+function brands(){return Array.prototype.map.call(document.querySelectorAll('.brands .cb input:checked'),function(i){return i.parentNode.querySelector('span').textContent.trim();});}
+function defects(){var o=[];document.querySelectorAll('.states .cb input:checked, .rows .cb input:checked').forEach(function(i){
+  var s=i.parentNode.querySelector('span').textContent.trim();if(!s||POS.test(s))return;var k=kw(s)[0];if(k)o.push({l:s,k:k});});return o;}
+var btn=document.getElementById('faqBtn'),panel=document.getElementById('faqPanel');
+function chip(label,k,on,title){var b=document.createElement('button');b.type='button';b.className='fch'+(on?' on':'');b.textContent=label;b.dataset.k=k;if(title)b.title=title;
+  b.onclick=function(){b.classList.toggle('on');sync();};return b;}
+function sync(){var ks=[];panel.querySelectorAll('.fch.on').forEach(function(b){if(ks.indexOf(b.dataset.k)<0)ks.push(b.dataset.k);});
+  panel.querySelector('.fq').value=ks.join(' ');links();}
+function links(){
+  var q=panel.querySelector('.fq').value.trim(),bs=brands(),bstr=bs.join(' '),box=panel.querySelector('.fl'),note=panel.querySelector('.fnote');
+  var list=FAQS[TYPE].filter(function(f){return f.b.test(bstr);}),extra='';
+  if(!bs.length)extra='Aucune marque cochée : toutes les FAQ du hub sont proposées.';
+  else if(!list.length)extra='Pas de FAQ dédiée pour « '+bs.join(', ')+' » dans le hub : FAQ génériques proposées, ou ajustez la recherche à la main.';
+  if(!list.length)list=FAQS[TYPE];
+  box.innerHTML='';
+  list.forEach(function(f){var a=document.createElement('a');a.href=f.u+(q?'?q='+encodeURIComponent(q):'');a.target='_blank';a.rel='noopener';a.textContent='🔎 '+f.n;box.appendChild(a);});
+  if(CODES.b.test(bstr)||!bs.length){var c=document.createElement('a');c.className='sec';c.href=CODES.u+(q?'?q='+encodeURIComponent(q):'');c.target='_blank';c.rel='noopener';c.textContent='⚠ '+CODES.n;box.appendChild(c);}
+  note.textContent=(extra?extra+' ':'')+'La recherche du hub exige que tous les mots soient présents : décochez un mot si rien ne sort.';
+}
+function build(){
+  var sy=(document.getElementById('symp')||{}).value||'',mo=modelInput(),mod=mo?mo.value:'',df=defects();
+  panel.innerHTML='<h4>Symptôme déclaré</h4><div id="fcS"></div><h4>Modèle</h4><div id="fcM"></div><h4>Défauts constatés sur la fiche</h4><div id="fcD"></div><h4>Recherche (modifiable)</h4><input class="fq" type="search" autocomplete="off"><div class="fl"></div><div class="fnote"></div>';
+  var S=kw(sy).slice(0,6),M=kw(mod).slice(0,4);
+  S.forEach(function(w,i){panel.querySelector('#fcS').appendChild(chip(w,w,i<3));});
+  M.forEach(function(w){panel.querySelector('#fcM').appendChild(chip(w,w,false));});
+  df.slice(0,10).forEach(function(d){panel.querySelector('#fcD').appendChild(chip(d.l,d.k,false,'mot-clé : '+d.k));});
+  if(!S.length)panel.querySelector('#fcS').innerHTML='<span class="fnote">Renseignez le champ « Symptôme de panne » ci-dessus.</span>';
+  if(!M.length)panel.querySelector('#fcM').innerHTML='<span class="fnote">Modèle non renseigné.</span>';
+  if(!df.length)panel.querySelector('#fcD').innerHTML='<span class="fnote">Aucun défaut coché dans les contrôles.</span>';
+  panel.querySelector('.fq').addEventListener('input',links);
+  sync();
+}
+btn.addEventListener('click',function(){
+  if(panel.style.display==='block'){panel.style.display='none';return;}
+  build();panel.style.display='block';panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+});
+})();
 function phSync(){
   var l=document.querySelectorAll('#phGrid .ph');
   l.forEach(function(p,i){p.querySelector('.phn').textContent='Photo '+(i+1);});

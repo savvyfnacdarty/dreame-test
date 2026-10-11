@@ -531,5 +531,11 @@ document.addEventListener('keydown', e => {
 });
 render();
 </script>
+<script>
+/* Hub : recherche pré-remplie via ?q= (depuis les fiches d'inspection) */
+(function(){try{var q=new URLSearchParams(location.search).get('q');if(!q)return;
+var i=document.getElementById('q')||document.getElementById('searchInput')||document.getElementById('search');
+if(!i)return;i.value=q;i.dispatchEvent(new Event('input',{bubbles:true}));}catch(e){}})();
+</script>
 </body>
 </html>
