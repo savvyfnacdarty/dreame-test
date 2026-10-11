@@ -413,47 +413,72 @@ function snFromQr(v){
   if(/^[A-Za-z0-9\-_.\/]{4,40}$/.test(v))return v.toUpperCase();
   var l=parseSerials(v);return l.length?l[0]:v.toUpperCase();
 }
-function loadJsQR(){return new Promise(function(res,rej){
-  if(window.jsQR)return res();
-  var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js';
-  s.onload=res;s.onerror=function(){rej(new Error('offline'))};document.head.appendChild(s);});}
+function loadScript(u){return new Promise(function(res,rej){var s=document.createElement('script');s.src=u;s.onload=res;s.onerror=function(){rej(new Error('load'))};document.head.appendChild(s);});}
+function loadJsQR(){
+  if(window.jsQR)return Promise.resolve();
+  return loadScript('lib/jsQR.min.js').catch(function(){return loadScript('https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js');}).then(function(){if(!window.jsQR)throw new Error('jsqr');});
+}
+function decodeCanvas(c){var x=c.getContext('2d'),d=x.getImageData(0,0,c.width,c.height);
+  var r=jsQR(d.data,d.width,d.height,{inversionAttempts:'attemptBoth'});return r?r.data:null;}
 function qrFromImg(im){
   return loadJsQR().then(function(){
-    var c=toCanvas(im,1600),x=c.getContext('2d'),d=x.getImageData(0,0,c.width,c.height);
-    var r=jsQR(d.data,d.width,d.height,{inversionAttempts:'attemptBoth'});return r?r.data:null;
+    var W=im.naturalWidth||im.width,H=im.naturalHeight||im.height,v=null,sizes=[1600,2400,1000];
+    for(var i=0;i<sizes.length&&!v;i++){try{v=decodeCanvas(toCanvas(im,sizes[i]));}catch(e){}}
+    if(!v){ /* étiquette petite dans la photo : on essaie des zones agrandies (3x3 se chevauchant) */
+      var tw=Math.round(W*.5),th=Math.round(H*.5);
+      for(var yy=0;yy<3&&!v;yy++)for(var xx=0;xx<3&&!v;xx++){
+        var sx=Math.round((W-tw)*xx/2),sy=Math.round((H-th)*yy/2),c=document.createElement('canvas');
+        var sc=Math.min(1,1400/Math.max(tw,th));c.width=Math.round(tw*sc);c.height=Math.round(th*sc);
+        c.getContext('2d').drawImage(im,sx,sy,tw,th,0,0,c.width,c.height);
+        try{v=decodeCanvas(c);}catch(e){}
+      }
+    }
+    return v;
   }).catch(function(){return null;});
 }
 var qrStream=null,qrRun=false;
 function qrStop(){qrRun=false;if(qrStream){qrStream.getTracks().forEach(function(t){t.stop();});qrStream=null;}
   document.getElementById('qrOv').style.display='none';}
+function qrFail(msg){qrRun=false;if(qrStream){qrStream.getTracks().forEach(function(t){t.stop();});qrStream=null;}
+  var st=document.getElementById('qrSt');if(st)st.textContent=msg;var v=document.getElementById('qrVid');if(v)v.style.display='none';}
 function qrStart(){
   var ov=document.getElementById('qrOv'),vd=document.getElementById('qrVid'),st=document.getElementById('qrSt'),inp=document.getElementById('snInp');
-  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){showSerials([],'Caméra indisponible : utilisez « Photo de l\'étiquette ».',true);return;}
-  ov.style.display='flex';st.textContent='Cadrez le QR code de l\'étiquette…';
+  vd.style.display='';ov.style.display='flex';st.textContent='Ouverture de la caméra…';
+  var ua=navigator.userAgent||'';
+  if(!window.isSecureContext||!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+    qrFail('Caméra non disponible dans ce navigateur'+(/Teams|Outlook|FBAN|FBAV|Instagram|Line\/|; wv\)/i.test(ua)?' (navigateur intégré à une application)':'')+'. Ouvrez la fiche dans Safari, ou utilisez « Photo de l\'étiquette ».');return;}
   navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false}).then(function(s){
-    qrStream=s;vd.srcObject=s;vd.play();qrRun=true;
+    qrStream=s;vd.setAttribute('playsinline','');vd.setAttribute('webkit-playsinline','');vd.muted=true;vd.srcObject=s;
+    var pl=vd.play();if(pl&&pl.catch)pl.catch(function(){});
+    qrRun=true;st.textContent='Chargement du lecteur QR…';
     var det=null;try{if('BarcodeDetector' in window)det=new BarcodeDetector({formats:['qr_code','data_matrix','code_128','code_39','ean_13']});}catch(e){det=null;}
     var cv=document.createElement('canvas'),cx=cv.getContext('2d',{willReadFrequently:true});
-    (det?Promise.resolve():loadJsQR().catch(function(){return null;})).then(function(){
+    (det?Promise.resolve():loadJsQR()).then(function(){
+      st.textContent='Cadrez le QR code de l\'étiquette (bien net, sans reflet)…';
+      var t0=Date.now();
       (function tick(){
         if(!qrRun)return;
-        if(vd.readyState<2||!vd.videoWidth){requestAnimationFrame(tick);return;}
+        if(vd.readyState<2||!vd.videoWidth){if(Date.now()-t0>8000){qrFail('La caméra ne renvoie pas d\'image. Fermez et réessayez, ou utilisez « Photo de l\'étiquette ».');return;}requestAnimationFrame(tick);return;}
         var p;
         if(det){p=det.detect(vd).then(function(r){return r.length?r[0].rawValue:null;}).catch(function(){return null;});}
-        else if(window.jsQR){var sc=Math.min(1,720/vd.videoWidth);cv.width=Math.round(vd.videoWidth*sc);cv.height=Math.round(vd.videoHeight*sc);
+        else{var sc=Math.min(1,900/vd.videoWidth);cv.width=Math.round(vd.videoWidth*sc);cv.height=Math.round(vd.videoHeight*sc);
           cx.drawImage(vd,0,0,cv.width,cv.height);var d=cx.getImageData(0,0,cv.width,cv.height);
           var c=jsQR(d.data,d.width,d.height,{inversionAttempts:'attemptBoth'});p=Promise.resolve(c?c.data:null);}
-        else{st.textContent='Lecteur QR indisponible (connexion requise) : utilisez « Photo de l\'étiquette ».';return;}
         p.then(function(v){
           if(!qrRun)return;
           if(v){var sn=snFromQr(v);qrStop();inp.value=sn;inp.dispatchEvent(new Event('input',{bubbles:true}));
             showSerials([],'QR lu : '+sn+(sn!==String(v).trim().toUpperCase()?' (contenu : '+String(v).slice(0,80)+')':'')+' — vérifiez le numéro.');
             if(navigator.vibrate)navigator.vibrate(80);}
-          else setTimeout(function(){requestAnimationFrame(tick);},100);
+          else setTimeout(function(){requestAnimationFrame(tick);},90);
         });
       })();
-    });
-  }).catch(function(){qrStop();showSerials([],'Accès à la caméra refusé : autorisez-le, ou utilisez « Photo de l\'étiquette ».',true);});
+    },function(){qrFail('Lecteur QR introuvable (fichier lib/jsQR.min.js non publié et pas de connexion). Utilisez « Photo de l\'étiquette » ou saisissez à la main.');});
+  }).catch(function(e){
+    var n=e&&e.name;
+    qrFail(n==='NotAllowedError'||n==='SecurityError'?'Accès à la caméra refusé. Sur iPhone : Réglages > Safari > Caméra > Autoriser (ou « Demander »), puis rouvrez la fiche. Sinon utilisez « Photo de l\'étiquette ».':
+      n==='NotFoundError'||n==='OverconstrainedError'?'Aucune caméra trouvée. Utilisez « Photo de l\'étiquette ».':
+      'Caméra impossible à ouvrir ('+(n||'erreur')+'). Utilisez « Photo de l\'étiquette ».');
+  });
 }
 document.getElementById('snQr').addEventListener('click',qrStart);
 document.getElementById('qrClose').addEventListener('click',qrStop);
