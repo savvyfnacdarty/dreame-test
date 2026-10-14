@@ -199,10 +199,22 @@ input[type=date].box{width:36mm;flex:none}
 .ident input.imei{letter-spacing:.3px}
 .opts .grp:empty{display:none}
 
+
+/* ---- Couleurs : vert = point positif / conforme, rouge = anomalie ---- */
+.cb.pos i,.cb.neg i{border-width:1.5px}
+.cb.pos i{border-color:#1a7f37}
+.cb.neg i{border-color:#c62828}
+.cb.pos input:checked + i{background:#e3f5e8;border-color:#1a7f37}
+.cb.neg input:checked + i{background:#fdeaea;border-color:#c62828}
+.cb.pos input:checked + i::after{border-color:#1a7f37}
+.cb.neg input:checked + i::after{border-color:#c62828}
+.cb.pos input:checked ~ span{color:#1a7f37;font-weight:bold}
+.cb.neg input:checked ~ span{color:#c62828;font-weight:bold}
+.legend{font-size:8pt;color:var(--grey);margin:1mm 0 2mm}.legend b.g{color:#1a7f37}.legend b.r{color:#c62828}
 </style></head>
 <body>
 <div id="qrOv"><video id="qrVid" playsinline muted></video><div class="qrst" id="qrSt"></div><button type="button" id="qrClose">Fermer</button></div>
-<div class="toolbar"><a href="index.html" style="color:#fff;text-decoration:none;font-weight:bold">&larr; Hub</a><button onclick="window.print()">Imprimer / PDF</button><button onclick="saveFile()">&#128190; Enregistrer</button><label class="tb">&#128194; Ouvrir<input type="file" id="openFile" accept=".json,application/json" hidden></label><button class="sec" onclick="resetAll()">Réinitialiser</button><span id="msg">Cases cliquables · repères sur schéma · photos · signatures</span></div>
+<div class="toolbar"><a href="index.html" style="color:#fff;text-decoration:none;font-weight:bold">&larr; Hub</a><button onclick="window.print()">Imprimer / PDF</button><button onclick="saveFile()">&#128190; Enregistrer</button><label class="tb">&#128194; Ouvrir<input type="file" id="openFile" accept=".json,application/json" hidden></label><button class="sec" onclick="resetAll()">Réinitialiser</button><span id="msg">Cases cliquables (vert = conforme, rouge = anomalie) · repères sur schéma · photos · signatures</span></div>
 
 <div class="page" id="p1">
 <header>
@@ -213,18 +225,18 @@ input[type=date].box{width:36mm;flex:none}
 <div class="ident">
   <label class="f w2">N° dossier : <input class="box" type="text"></label>
   <label class="f">Date : <input class="box" type="date"></label>
-  <label class="f">Modèle : <input class="box" type="text" placeholder="ex. iPhone 15, Galaxy S24"></label>
+  <label class="f">Modèle : <input class="box" type="text" id="mdlInp" placeholder="ex. iPhone 15, Galaxy S24"></label>
   <label class="f">IMEI 1 : <input class="box imei" type="text" id="imei1" inputmode="numeric" maxlength="17" placeholder="*#06#"></label>
   <label class="f">IMEI 2 (si présent) : <input class="box imei" type="text" id="imei2" inputmode="numeric" maxlength="17"></label>
   <div class="f w2 sn"><label class="f" style="flex:1">N° de série : <input class="box" type="text" id="snInp" autocomplete="off"></label>
   <button type="button" class="btn snbtn" id="snQr">&#9638; Scanner le QR code</button>
-  <label class="btn snbtn sec">&#128247; Photo de l'étiquette (IMEI / série)<input id="snCam" type="file" accept="image/*" capture="environment" hidden></label></div>
+  <label class="btn snbtn sec">&#128247; Photo de l'étiquette (modèle / IMEI / série)<input id="snCam" type="file" accept="image/*" capture="environment" hidden></label></div>
   <label class="f">Date d'achat : <input class="box" type="date"></label>
   <label class="f w2">Accessoires déposés : <input class="box" type="text" placeholder="ex. chargeur, câble, coque, carte SIM, carte mémoire…"></label>
 <div class="w3 snres" id="snRes"></div>
 </div>
 <div style="font-weight:bold;font-size:10pt">Marque :</div>
-<div class="brands"><label class="cb "><input type="checkbox"><i></i><span>Apple</span></label><label class="cb "><input type="checkbox"><i></i><span>Samsung</span></label><label class="cb "><input type="checkbox"><i></i><span>Xiaomi</span></label><label class="cb "><input type="checkbox"><i></i><span>Google</span></label><label class="cb "><input type="checkbox"><i></i><span>Huawei</span></label><label class="cb "><input type="checkbox"><i></i><span>Honor</span></label><label class="cb "><input type="checkbox"><i></i><span>Oppo</span></label><label class="cb "><input type="checkbox"><i></i><span>OnePlus</span></label><label class="cb "><input type="checkbox"><i></i><span>Motorola</span></label><label class="cb "><input type="checkbox"><i></i><span>Nothing</span></label><label class="cb "><input type="checkbox"><i></i><span>Autre :</span></label> <input class="line" type="text" placeholder="préciser" style="width:30mm"></div>
+<div class="brands"><label class="cb"><input type="checkbox"><i></i><span>Apple</span></label><label class="cb"><input type="checkbox"><i></i><span>Samsung</span></label><label class="cb"><input type="checkbox"><i></i><span>Xiaomi</span></label><label class="cb"><input type="checkbox"><i></i><span>Google</span></label><label class="cb"><input type="checkbox"><i></i><span>Huawei</span></label><label class="cb"><input type="checkbox"><i></i><span>Honor</span></label><label class="cb"><input type="checkbox"><i></i><span>Oppo</span></label><label class="cb"><input type="checkbox"><i></i><span>OnePlus</span></label><label class="cb"><input type="checkbox"><i></i><span>Motorola</span></label><label class="cb"><input type="checkbox"><i></i><span>Nothing</span></label><label class="cb"><input type="checkbox"><i></i><span>Autre :</span></label> <input class="line" type="text" placeholder="préciser" style="width:30mm"></div>
 
 <div class="sympt"><label for="symp">Symptôme de panne (déclaré par le client) :</label><textarea id="symp" placeholder="ex. ne s'allume plus, ne charge pas, écran cassé, plus de réseau, pas de son…"></textarea></div>
 
@@ -232,7 +244,7 @@ input[type=date].box{width:36mm;flex:none}
 
 <h2>Éléments reçus avec le produit</h2>
 <button type="button" class="btn sec rcall" id="rcAll">&#10003; Tout présent</button>
-<div class="recu"><div class="rc"><span class="rn">Téléphone</span><label class="cb pr"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Chargeur secteur</span><label class="cb pr"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Câble de charge</span><label class="cb pr"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Coque / étui</span><label class="cb pr"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Carte SIM (ou tiroir)</span><label class="cb pr"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Carte mémoire</span><label class="cb pr"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Écouteurs / oreillettes</span><label class="cb pr"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Boîte d&#39;origine</span><label class="cb pr"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Autres accessoires</span><label class="cb pr"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab"><input type="checkbox"><i></i><span>Absent</span></label></div></div>
+<div class="recu"><div class="rc"><span class="rn">Téléphone</span><label class="cb pr pos"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab neg"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Chargeur secteur</span><label class="cb pr pos"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab neg"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Câble de charge</span><label class="cb pr pos"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab neg"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Coque / étui</span><label class="cb pr pos"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab neg"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Carte SIM (ou tiroir)</span><label class="cb pr pos"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab neg"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Carte mémoire</span><label class="cb pr pos"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab neg"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Écouteurs / oreillettes</span><label class="cb pr pos"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab neg"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Boîte d&#39;origine</span><label class="cb pr pos"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab neg"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Autres accessoires</span><label class="cb pr pos"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab neg"><input type="checkbox"><i></i><span>Absent</span></label></div></div>
 <div class="gcam acc"><label class="btn rowcam" data-sec="Ensemble des accessoires">&#128247; Photo de l'ensemble des accessoires<span class="n"></span><input type="file" accept="image/*" capture="environment" hidden></label><span>Tous les accessoires remis, réunis sur une seule photo.</span><span class="accth"></span></div>
 
 <h2>Schéma global <em>(À compléter si nécessaire — cliquer sur le schéma pour repérer un défaut, re-cliquer sur le repère pour le retirer)</em></h2>
@@ -245,17 +257,17 @@ input[type=date].box{width:36mm;flex:none}
 <div class="gcam"><label class="btn rowcam" data-sec="Schéma global / état général">&#128247; Photo<span class="n"></span><input type="file" accept="image/*" capture="environment" hidden></label><span>Photo de l'aspect général (rayures, chocs…)</span></div>
 <div class="states">
   <div>
-    <label class="cb "><input type="checkbox"><i></i><span>Écran intact</span></label>
-    <label class="cb "><input type="checkbox"><i></i><span>Écran cassé / fissuré</span></label>
-    <label class="cb "><input type="checkbox"><i></i><span>Châssis intact</span></label>
-    <label class="cb "><input type="checkbox"><i></i><span>Dos intact</span></label>
+    <label class="cb pos"><input type="checkbox"><i></i><span>Écran intact</span></label>
+    <label class="cb neg"><input type="checkbox"><i></i><span>Écran cassé / fissuré</span></label>
+    <label class="cb pos"><input type="checkbox"><i></i><span>Châssis intact</span></label>
+    <label class="cb pos"><input type="checkbox"><i></i><span>Dos intact</span></label>
   </div>
   <div>
-    <label class="cb "><input type="checkbox"><i></i><span>Rayures</span></label>
-    <label class="cb "><input type="checkbox"><i></i><span>Traces d'oxydation (eau / humidité)</span></label>
-    <label class="cb "><input type="checkbox"><i></i><span>Traces d'ouverture du boîtier</span></label>
-    <label class="cb "><input type="checkbox"><i></i><span>Boutons endommagés</span></label>
-    <label class="cb "><input type="checkbox"><i></i><span>Connecteur de charge endommagé</span></label>
+    <label class="cb neg"><input type="checkbox"><i></i><span>Rayures</span></label>
+    <label class="cb neg"><input type="checkbox"><i></i><span>Traces d'oxydation (eau / humidité)</span></label>
+    <label class="cb neg"><input type="checkbox"><i></i><span>Traces d'ouverture du boîtier</span></label>
+    <label class="cb neg"><input type="checkbox"><i></i><span>Boutons endommagés</span></label>
+    <label class="cb neg"><input type="checkbox"><i></i><span>Connecteur de charge endommagé</span></label>
   </div>
 </div>
 
@@ -264,25 +276,25 @@ input[type=date].box{width:36mm;flex:none}
 
 <div class="rows"><section class="row"><div class="icol"><div class="ico"><svg viewBox="0 0 60 48"><rect x="19" y="4" width="22" height="40" rx="4" fill="#fff" stroke="#444" stroke-width="2"/><rect x="22" y="9" width="16" height="30" rx="1" fill="#9cc4e4"/><path d="M24 14l10 12M33 13l-5 9" stroke="#d6231a" stroke-width="1.4"/></svg></div><label class="btn rowcam" data-sec="Écran &amp; tactile">&#128247;<span class="n"></span><input type="file" accept="image/*" capture="environment" hidden></label></div>
 <div class="txt"><h3>Écran &amp; tactile</h3><p>Vérifier l'affichage, la réactivité tactile et la présence éventuelle de défauts (taches, lignes, pixels morts…).</p></div>
-<div class="opts"><div class="grp"><label class="cb "><input type="checkbox"><i></i><span>OK</span></label><label class="cb "><input type="checkbox"><i></i><span>Rayé</span></label><label class="cb "><input type="checkbox"><i></i><span>Fissuré / cassé</span></label><label class="cb "><input type="checkbox"><i></i><span>Défaut d'affichage / pixels morts</span></label></div><div class="grp"><label class="cb "><input type="checkbox"><i></i><span>Tactile fonctionnel</span></label><label class="cb "><input type="checkbox"><i></i><span>Tactile défectueux</span></label></div></div></section>
+<div class="opts"><div class="grp"><label class="cb pos"><input type="checkbox"><i></i><span>OK</span></label><label class="cb neg"><input type="checkbox"><i></i><span>Rayé</span></label><label class="cb neg"><input type="checkbox"><i></i><span>Fissuré / cassé</span></label><label class="cb neg"><input type="checkbox"><i></i><span>Défaut d'affichage / pixels morts</span></label></div><div class="grp"><label class="cb pos"><input type="checkbox"><i></i><span>Tactile fonctionnel</span></label><label class="cb neg"><input type="checkbox"><i></i><span>Tactile défectueux</span></label></div></div></section>
 <section class="row"><div class="icol"><div class="ico"><svg viewBox="0 0 60 48"><rect x="14" y="8" width="32" height="32" rx="7" fill="#f6f6f6" stroke="#444" stroke-width="2"/><circle cx="25" cy="19" r="6" fill="#444"/><circle cx="25" cy="31" r="6" fill="#444"/><circle cx="37" cy="25" r="3" fill="#f5c542" stroke="#444"/></svg></div><label class="btn rowcam" data-sec="Appareil photo &amp; flash">&#128247;<span class="n"></span><input type="file" accept="image/*" capture="environment" hidden></label></div>
 <div class="txt"><h3>Appareil photo &amp; flash</h3><p>Tester les caméras avant et arrière, la mise au point et le flash.</p></div>
-<div class="opts"><div class="grp"><label class="cb "><input type="checkbox"><i></i><span>OK</span></label><label class="cb "><input type="checkbox"><i></i><span>Caméra avant défectueuse</span></label><label class="cb "><input type="checkbox"><i></i><span>Caméra arrière défectueuse</span></label><label class="cb "><input type="checkbox"><i></i><span>Flash défectueux</span></label></div></div></section>
+<div class="opts"><div class="grp"><label class="cb pos"><input type="checkbox"><i></i><span>OK</span></label><label class="cb neg"><input type="checkbox"><i></i><span>Caméra avant défectueuse</span></label><label class="cb neg"><input type="checkbox"><i></i><span>Caméra arrière défectueuse</span></label><label class="cb neg"><input type="checkbox"><i></i><span>Flash défectueux</span></label></div></div></section>
 <section class="row"><div class="icol"><div class="ico"><svg viewBox="0 0 60 48"><rect x="10" y="14" width="40" height="20" rx="4" fill="#f6f6f6" stroke="#444" stroke-width="2"/><g fill="#444"><circle cx="18" cy="24" r="1.7"/><circle cx="24" cy="24" r="1.7"/><circle cx="30" cy="24" r="1.7"/><circle cx="36" cy="24" r="1.7"/><circle cx="42" cy="24" r="1.7"/></g></svg></div><label class="btn rowcam" data-sec="Son &amp; microphones">&#128247;<span class="n"></span><input type="file" accept="image/*" capture="environment" hidden></label></div>
 <div class="txt"><h3>Son &amp; microphones</h3><p>Vérifier le haut-parleur, l'écouteur et les microphones (appels, audio, vidéo).</p></div>
-<div class="opts"><div class="grp"><label class="cb "><input type="checkbox"><i></i><span>OK</span></label><label class="cb "><input type="checkbox"><i></i><span>Haut-parleur défectueux</span></label><label class="cb "><input type="checkbox"><i></i><span>Écouteur défectueux</span></label><label class="cb "><input type="checkbox"><i></i><span>Microphone défectueux</span></label></div></div></section>
+<div class="opts"><div class="grp"><label class="cb pos"><input type="checkbox"><i></i><span>OK</span></label><label class="cb neg"><input type="checkbox"><i></i><span>Haut-parleur défectueux</span></label><label class="cb neg"><input type="checkbox"><i></i><span>Écouteur défectueux</span></label><label class="cb neg"><input type="checkbox"><i></i><span>Microphone défectueux</span></label></div></div></section>
 <section class="row"><div class="icol"><div class="ico"><svg viewBox="0 0 60 48"><rect x="22" y="6" width="16" height="36" rx="5" fill="#fff" stroke="#444" stroke-width="2"/><rect x="38" y="14" width="4" height="10" rx="1.5" fill="#444"/><rect x="18" y="12" width="4" height="7" rx="1.5" fill="#444"/><rect x="18" y="22" width="4" height="7" rx="1.5" fill="#444"/></svg></div><label class="btn rowcam" data-sec="Boutons">&#128247;<span class="n"></span><input type="file" accept="image/*" capture="environment" hidden></label></div>
 <div class="txt"><h3>Boutons</h3><p>Tester les boutons (marche/arrêt, volume, bouton action…).</p></div>
-<div class="opts"><div class="grp"><label class="cb "><input type="checkbox"><i></i><span>OK</span></label><label class="cb "><input type="checkbox"><i></i><span>Bouton marche/arrêt défectueux</span></label><label class="cb "><input type="checkbox"><i></i><span>Boutons volume défectueux</span></label><label class="cb "><input type="checkbox"><i></i><span>Autre bouton défectueux</span></label></div></div></section>
+<div class="opts"><div class="grp"><label class="cb pos"><input type="checkbox"><i></i><span>OK</span></label><label class="cb neg"><input type="checkbox"><i></i><span>Bouton marche/arrêt défectueux</span></label><label class="cb neg"><input type="checkbox"><i></i><span>Boutons volume défectueux</span></label><label class="cb neg"><input type="checkbox"><i></i><span>Autre bouton défectueux</span></label></div></div></section>
 <section class="row"><div class="icol"><div class="ico"><svg viewBox="0 0 60 48"><rect x="12" y="30" width="6" height="10" fill="#444"/><rect x="22" y="24" width="6" height="16" fill="#444"/><rect x="32" y="18" width="6" height="22" fill="#444"/><rect x="42" y="10" width="6" height="30" fill="#bbb"/></svg></div><label class="btn rowcam" data-sec="Réseau, SIM &amp; connectivité">&#128247;<span class="n"></span><input type="file" accept="image/*" capture="environment" hidden></label></div>
 <div class="txt"><h3>Réseau, SIM &amp; connectivité</h3><p>Vérifier la détection de la carte SIM, le réseau mobile, le Wi-Fi et le Bluetooth.</p></div>
-<div class="opts"><div class="grp"><label class="cb "><input type="checkbox"><i></i><span>OK</span></label><label class="cb "><input type="checkbox"><i></i><span>Carte SIM non détectée</span></label><label class="cb "><input type="checkbox"><i></i><span>Réseau mobile défectueux</span></label></div><div class="grp"><label class="cb "><input type="checkbox"><i></i><span>Wi-Fi défectueux</span></label><label class="cb "><input type="checkbox"><i></i><span>Bluetooth défectueux</span></label><label class="cb "><input type="checkbox"><i></i><span>Lecture carte mémoire impossible</span></label></div></div></section>
+<div class="opts"><div class="grp"><label class="cb pos"><input type="checkbox"><i></i><span>OK</span></label><label class="cb neg"><input type="checkbox"><i></i><span>Carte SIM non détectée</span></label><label class="cb neg"><input type="checkbox"><i></i><span>Réseau mobile défectueux</span></label></div><div class="grp"><label class="cb neg"><input type="checkbox"><i></i><span>Wi-Fi défectueux</span></label><label class="cb neg"><input type="checkbox"><i></i><span>Bluetooth défectueux</span></label><label class="cb neg"><input type="checkbox"><i></i><span>Lecture carte mémoire impossible</span></label></div></div></section>
 <section class="row"><div class="icol"><div class="ico"><svg viewBox="0 0 60 48"><rect x="10" y="16" width="34" height="18" rx="3" fill="#fff" stroke="#444" stroke-width="2"/><rect x="44" y="21" width="4" height="8" fill="#444"/><path d="M28 18l-6 9h5l-3 7" fill="none" stroke="#f08a00" stroke-width="2"/></svg></div><label class="btn rowcam" data-sec="Recharge &amp; batterie">&#128247;<span class="n"></span><input type="file" accept="image/*" capture="environment" hidden></label></div>
 <div class="txt"><h3>Recharge &amp; batterie</h3><p>Vérifier la recharge filaire et sans fil (si présent), la tenue de la batterie et la détection de charge.</p></div>
-<div class="opts"><div class="grp"><label class="cb "><input type="checkbox"><i></i><span>OK</span></label><label class="cb "><input type="checkbox"><i></i><span>Ne charge pas</span></label><label class="cb "><input type="checkbox"><i></i><span>Charge intermittente</span></label><label class="cb "><input type="checkbox"><i></i><span>Recharge sans fil défectueuse</span></label></div><div class="grp"><label class="cb "><input type="checkbox"><i></i><span>Autonomie anormale</span></label><label class="cb "><input type="checkbox"><i></i><span>Batterie à remplacer</span></label><label class="cb "><input type="checkbox"><i></i><span>Surchauffe</span></label></div></div></section>
+<div class="opts"><div class="grp"><label class="cb pos"><input type="checkbox"><i></i><span>OK</span></label><label class="cb neg"><input type="checkbox"><i></i><span>Ne charge pas</span></label><label class="cb neg"><input type="checkbox"><i></i><span>Charge intermittente</span></label><label class="cb neg"><input type="checkbox"><i></i><span>Recharge sans fil défectueuse</span></label></div><div class="grp"><label class="cb neg"><input type="checkbox"><i></i><span>Autonomie anormale</span></label><label class="cb neg"><input type="checkbox"><i></i><span>Batterie à remplacer</span></label><label class="cb neg"><input type="checkbox"><i></i><span>Surchauffe</span></label></div></div></section>
 <section class="row"><div class="icol"><div class="ico"><svg viewBox="0 0 60 48"><path d="M22 15a12 12 0 1 0 16 0" fill="none" stroke="#444" stroke-width="2.4" stroke-linecap="round"/><path d="M30 9v15" stroke="#444" stroke-width="2.6" stroke-linecap="round"/></svg></div><label class="btn rowcam" data-sec="Démarrage &amp; sécurité">&#128247;<span class="n"></span><input type="file" accept="image/*" capture="environment" hidden></label></div>
 <div class="txt"><h3>Démarrage &amp; sécurité</h3><p>Vérifier l'allumage du téléphone et les sécurités (écran de verrouillage, compte Apple/Google…).</p></div>
-<div class="opts"><div class="grp"><label class="cb "><input type="checkbox"><i></i><span>OK</span></label><label class="cb "><input type="checkbox"><i></i><span>Ne s'allume pas</span></label><label class="cb "><input type="checkbox"><i></i><span>Écran noir</span></label></div><div class="grp"><label class="cb "><input type="checkbox"><i></i><span>Code oublié / bloqué</span></label><label class="cb "><input type="checkbox"><i></i><span>Compte Apple/Google présent</span></label><label class="cb "><input type="checkbox"><i></i><span>Réinitialisation impossible</span></label></div></div></section>
+<div class="opts"><div class="grp"><label class="cb pos"><input type="checkbox"><i></i><span>OK</span></label><label class="cb neg"><input type="checkbox"><i></i><span>Ne s'allume pas</span></label><label class="cb neg"><input type="checkbox"><i></i><span>Écran noir</span></label></div><div class="grp"><label class="cb neg"><input type="checkbox"><i></i><span>Code oublié / bloqué</span></label><label class="cb"><input type="checkbox"><i></i><span>Compte Apple/Google présent</span></label><label class="cb neg"><input type="checkbox"><i></i><span>Réinitialisation impossible</span></label></div></div></section>
 </div>
 
 <div class="obs"><h2>Détails complémentaires / Motif de prise en charge</h2>
@@ -376,32 +388,10 @@ function showSerials(list,msg,err){
 }
 document.getElementById('snCam').addEventListener('change',function(e){
   var f=e.target.files[0];e.target.value='';if(!f)return;
-  var inp=document.getElementById('snInp');
-  showSerials([],'Lecture en cours…');
   loadImg(f).then(function(o){
     addPhotoData(toCanvas(o.im,1400).toDataURL('image/jpeg',.8),'Étiquette N° de série');
-    var cands=[],pBar=Promise.resolve();
-    if('BarcodeDetector' in window){
-      pBar=new BarcodeDetector().detect(o.im).then(function(r){r.forEach(function(x){if(x.rawValue)cands.push(snFromQr(x.rawValue));});}).catch(function(){});
-    }
-    return pBar.then(function(){
-      if(cands.length)return;
-      return qrFromImg(o.im).then(function(v){if(v)cands.push(snFromQr(v));});
-    }).then(function(){
-      return cands.length?null:loadTess().then(function(){
-        return Tesseract.recognize(toCanvas(o.im,2000,true),'eng');
-      }).then(function(r){parseSerials(r.data.text).forEach(function(s){if(cands.indexOf(s)<0)cands.push(s);});
-      },function(){return 'noocr';});
-    }).then(function(flag){
-      URL.revokeObjectURL(o.url);
-      var im=cands.filter(isImei),rest=cands.filter(function(s){return !isImei(s);});
-      fillImei(im);
-      if(!cands.length){showSerials([],flag==='noocr'?'OCR indisponible (connexion requise) : saisissez les numéros à la main, la photo de l\'étiquette est jointe.':'Aucun numéro lisible : rapprochez-vous, évitez les reflets, ou saisissez à la main (IMEI : composer *#06#).',true);return;}
-      if(!rest.length){showSerials([],'IMEI lu : '+im.join(' / ')+' — vérifiez ; N° de série à saisir si besoin.');return;}
-      inp.value=rest[0];
-      showSerials(rest.slice(1,8),(im.length?'IMEI lu : '+im.join(' / ')+'. ':'')+'Lecture : vérifiez le N° de série'+(rest.length>1?' — autres propositions :':'.'));
-    });
-  }).catch(function(){showSerials([],'Image illisible.',true);});
+    return LabelReader.run(o.im).then(function(){URL.revokeObjectURL(o.url);});
+  }).catch(function(){var b=document.getElementById('snRes');if(b)b.textContent='Image illisible.';});
 });
 
 /* ---- QR code : lecture directe (caméra) et sur photo ---- */
@@ -587,6 +577,7 @@ document.getElementById('openFile').addEventListener('change',function(e){
 ['input','change','click'].forEach(function(ev){document.querySelector('.page').addEventListener(ev,function(){dirty=true;});});
 window.addEventListener('beforeunload',function(e){if(dirty){e.preventDefault();e.returnValue='';}});
 </script>
+<script src="lib/label-reader.js"></script>
 <script src="lib/relay-crypto.js"></script>
 <script src="lib/qrcode-generator.js"></script>
 <script src="lib/relay-photos.js"></script>
