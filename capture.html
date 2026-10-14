@@ -112,7 +112,7 @@ h2{font-size:15px;margin:0 0 8px}
     document.querySelectorAll(".chip").forEach(function (c) { c.classList.toggle("on", c === b); });
   }
 
-  /* ---- image : redimensionnée (1280 px) puis envoyée chiffrée ---- */
+  /* ---- image : redimensionnée (1280 px ; 2200 px pour l'étiquette) puis envoyée chiffrée ---- */
   function readImg(file) {
     return new Promise(function (res, rej) {
       var u = URL.createObjectURL(file), im = new Image();
@@ -146,8 +146,14 @@ h2{font-size:15px;margin:0 0 8px}
       if (!f.type || f.type.indexOf("image") !== 0) return;
       var section = sec;
       readImg(f).then(function (o) {
-        var q = .72, d = shrink(o.im, 1280, q);
-        while (d.length > 520000 && q > .4) { q -= .1; d = shrink(o.im, q < .5 ? 1000 : 1280, q); }
+        var lab = section === "Étiquette N° de série", q, d;
+        if (lab) { /* étiquette : on garde le maximum de détails (texte et codes-barres à lire) */
+          var sz = 2200; q = .85; d = shrink(o.im, sz, q);
+          while (d.length > 580000 && (q > .5 || sz > 1500)) { if (q > .5) q -= .07; else { sz -= 250; q = .75; } d = shrink(o.im, sz, q); }
+        } else {
+          q = .72; d = shrink(o.im, 1280, q);
+          while (d.length > 520000 && q > .4) { q -= .1; d = shrink(o.im, q < .5 ? 1000 : 1280, q); }
+        }
         URL.revokeObjectURL(o.url);
         var th = document.createElement("div"); th.className = "th";
         th.innerHTML = '<img alt=""><div class="b"></div>'; th.querySelector("img").src = d;

@@ -10,3 +10,4 @@ kitchenaid/kitchenaid_new/
 *.bak
 *.bak_*
 *.bak[0-9]
+00_*/
