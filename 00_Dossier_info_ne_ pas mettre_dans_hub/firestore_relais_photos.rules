@@ -1,0 +1,58 @@
+// ============================================================================
+//  RELAIS PHOTOS TÉLÉPHONE -> FICHES D'INSPECTION  (Firebase / Firestore)
+//  Projet Firebase : hub-drive-constructeurs
+// ----------------------------------------------------------------------------
+//  À FAIRE UNE SEULE FOIS dans la console Firebase (https://console.firebase.google.com) :
+//   1. Projet « hub-drive-constructeurs » > Build > Firestore Database
+//      > « Créer une base de données » (si elle n'existe pas encore)
+//        - Édition Standard, emplacement europe (ex. eur3 ou europe-west1), mode PRODUCTION.
+//   2. Onglet « Règles » : collez le bloc « match /relay/{sid} » ci-dessous dans votre
+//      fichier de règles (s'il y a déjà des règles, AJOUTEZ seulement ce bloc dans
+//      « match /databases/{database}/documents { ... } »), puis « Publier ».
+//   3. (Recommandé) Onglet « Time-to-live » > « Ajouter une règle TTL » :
+//        - Groupe de collections « relay »  / champ « exp »
+//        - Groupe de collections « photos » / champ « exp »
+//      => Firebase supprime automatiquement ce qui traînerait au-delà de la session.
+//
+//  Sécurité :
+//   - Les photos sont chiffrées dans le navigateur (AES-GCM 256). La clé n'est que dans le QR
+//     code (partie # de l'adresse) : elle n'arrive jamais sur Firebase ni sur GitHub Pages.
+//   - Le téléphone n'est PAS connecté au hub : il peut seulement AJOUTER des photos chiffrées
+//     dans une session existante (identifiant aléatoire de 128 bits) ; il ne peut rien lire
+//     ni lister.
+//   - Seul le PC connecté au hub, qui a créé la session, peut lire / supprimer ses photos.
+// ============================================================================
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /relay/{sid} {
+      // Session : lisible par qui connaît l'identifiant (contenu chiffré), jamais listable.
+      allow get: if true;
+      allow list: if false;
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasOnly(['m', 'iv', 'exp', 'uid'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.exp is timestamp
+        && request.resource.data.exp > request.time
+        && request.resource.data.exp <= request.time + duration.value(3, 'h')
+        && request.resource.data.m is string && request.resource.data.m.size() < 20000
+        && request.resource.data.iv is string && request.resource.data.iv.size() < 40;
+      allow update: if false;
+      allow delete: if request.auth != null && resource.data.uid == request.auth.uid;
+
+      match /photos/{pid} {
+        // Le téléphone (non connecté) ajoute une photo chiffrée à une session valide.
+        allow create: if get(/databases/$(database)/documents/relay/$(sid)).data.exp > request.time
+          && request.resource.data.keys().hasOnly(['iv', 'd', 'exp'])
+          && request.resource.data.exp == get(/databases/$(database)/documents/relay/$(sid)).data.exp
+          && request.resource.data.iv is string && request.resource.data.iv.size() < 40
+          && request.resource.data.d is string && request.resource.data.d.size() < 850000;
+        // Seul le PC propriétaire de la session lit et supprime.
+        allow read, delete: if request.auth != null
+          && get(/databases/$(database)/documents/relay/$(sid)).data.uid == request.auth.uid;
+        allow update: if false;
+      }
+    }
+  }
+}

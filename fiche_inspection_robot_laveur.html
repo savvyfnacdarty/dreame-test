@@ -184,6 +184,13 @@ input[type=date].box{width:36mm;flex:none}
  #faqPanel .fl a{font-size:12pt;padding:3mm 4mm;flex:1 1 100%;text-align:center}
 }
 @media print{.faqbtn,#faqPanel{display:none!important}}
+
+/* ---- Photo de l'ensemble des accessoires ---- */
+.gcam.acc{margin:2mm 0 3mm;padding:2mm 3mm;border:1.5px dashed var(--orange);border-radius:3px;background:#fffaf2;flex-wrap:wrap}
+.gcam.acc .rowcam{font-size:10pt;padding:1.8mm 4mm}
+.gcam.acc .accth{display:flex;gap:2mm;flex-wrap:wrap}
+.gcam.acc .accth img{height:14mm;width:auto;border:1px solid var(--line);border-radius:2px;display:block}
+@media screen and (max-width:800px){.gcam.acc{font-size:11pt}.gcam.acc .rowcam{font-size:13pt;padding:3.2mm 4mm;flex:1 1 100%;justify-content:center}.gcam.acc .accth img{height:20mm}}
 </style></head>
 <body>
 <div id="qrOv"><video id="qrVid" playsinline muted></video><div class="qrst" id="qrSt"></div><button type="button" id="qrClose">Fermer</button></div>
@@ -216,6 +223,7 @@ input[type=date].box{width:36mm;flex:none}
 <h2>Éléments reçus avec le produit</h2>
 <button type="button" class="btn sec rcall" id="rcAll">&#10003; Tout présent</button>
 <div class="recu"><div class="rc"><span class="rn">Robot</span><label class="cb pr"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Station / base</span><label class="cb pr"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Cordon secteur</span><label class="cb pr"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Bac à poussière</span><label class="cb pr"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Réservoir d'eau</span><label class="cb pr"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Pads / serpillières</span><label class="cb pr"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Brosse principale</span><label class="cb pr"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Brosse latérale</span><label class="cb pr"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Filtre</span><label class="cb pr"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Accessoires / télécommande</span><label class="cb pr"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab"><input type="checkbox"><i></i><span>Absent</span></label></div></div>
+<div class="gcam acc"><label class="btn rowcam" data-sec="Ensemble des accessoires">&#128247; Photo de l'ensemble des accessoires<span class="n"></span><input type="file" accept="image/*" capture="environment" hidden></label><span>Tous les accessoires remis, réunis sur une seule photo.</span><span class="accth"></span></div>
 
 <h2>Schéma global <em>(À compléter si nécessaire — cliquer sur le schéma pour repérer un défaut, re-cliquer sur le repère pour le retirer)</em></h2>
 <div class="views">
@@ -548,6 +556,7 @@ btn.addEventListener('click',function(){
 })();
 function phSync(){
   var l=document.querySelectorAll('#phGrid .ph');
+  document.querySelectorAll('.accth').forEach(function(t){t.innerHTML='';l.forEach(function(p){if(p.dataset.sec==='Ensemble des accessoires'){var im=document.createElement('img');im.src=p.querySelector('img').src;im.alt='accessoires';t.appendChild(im);}});});
   l.forEach(function(p,i){p.querySelector('.phn').textContent='Photo '+(i+1);});
   document.getElementById('photos').classList.toggle('empty',l.length===0&&false);
   document.querySelectorAll('.rowcam').forEach(function(b){var n=0;l.forEach(function(p){if(p.dataset.sec&&p.dataset.sec===b.dataset.sec)n++;});b.querySelector('.n').textContent=n||'';});
@@ -633,4 +642,7 @@ document.getElementById('openFile').addEventListener('change',function(e){
 ['input','change','click'].forEach(function(ev){document.querySelector('.page').addEventListener(ev,function(){dirty=true;});});
 window.addEventListener('beforeunload',function(e){if(dirty){e.preventDefault();e.returnValue='';}});
 </script>
+<script src="lib/relay-crypto.js"></script>
+<script src="lib/qrcode-generator.js"></script>
+<script src="lib/relay-photos.js"></script>
 </body></html>
