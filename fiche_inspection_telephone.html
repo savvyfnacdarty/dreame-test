@@ -279,7 +279,7 @@ input[type=date].box{width:36mm;flex:none}
 
 <div class="ident">
   <label class="f w2">N° dossier : <input class="box" type="text"></label>
-  <label class="f">Date : <input class="box" type="date"></label>
+  <label class="f">Date : <input class="box" type="date" id="dateInp"></label>
   <label class="f w3">Modèle : <input class="box" type="text" id="mdlInp" placeholder="ex. iPhone 15, Galaxy S24"></label>
   <div class="f w3 sn"><label class="f" style="flex:1">N° de série : <input class="box" type="text" id="snInp" autocomplete="off"></label>
   <button type="button" class="btn snbtn" id="snQr">&#9638; Scanner le QR code</button>
@@ -590,6 +590,9 @@ function getSig(c){return c.dataset.s?c.toDataURL('image/png'):null;}
 function setSig(c,d){clearPadEl(c);if(!d)return;var im=new Image();im.onload=function(){c.getContext('2d').drawImage(im,0,0,c.width,c.height);c.dataset.s='1';};im.src=d;}
 document.querySelectorAll('.pad').forEach(initPad);
 /* --- sauvegarde / ouverture --- */
+function today(){var d=new Date(),p=function(n){return(n<10?'0':'')+n;};return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
+function setToday(){var e=document.getElementById('dateInp');if(e&&!e.value)e.value=today();}
+setToday();
 function statics(){return Array.prototype.filter.call(document.querySelectorAll('input[type=text],input[type=date],textarea'),function(i){return !i.closest('#phGrid');});}
 function collect(){
   var st={app:'fiche-inspection-telephone',v:1,saved:new Date().toISOString()};
@@ -619,7 +622,7 @@ function saveFile(){
 }
 function clearAll(){
   document.querySelectorAll('input[type=checkbox]').forEach(function(c){c.checked=false});
-  statics().forEach(function(c){c.value=''});document.getElementById('snRes').innerHTML='';
+  statics().forEach(function(c){c.value=''});setToday();document.getElementById('snRes').innerHTML='';
   document.querySelectorAll('.mk').forEach(function(m){m.remove()});
   document.querySelectorAll('#phGrid .ph').forEach(function(p){p.remove()});
   document.querySelectorAll('.pad').forEach(clearPadEl);phSync();
