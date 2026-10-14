@@ -157,6 +157,7 @@ input[type=date].box{width:36mm;flex:none}
 .rc{display:flex;align-items:center;gap:3mm;border-bottom:1px dotted var(--line);padding:.8mm 0;break-inside:avoid}
 .rc .rn{flex:1;font-size:10pt;font-weight:bold;min-width:0}
 .rc .cb{margin:0;font-size:9.5pt}
+.rc.rfree .rn{flex:0 0 auto}.rc.rfree input.box{flex:1;min-width:0;height:6.5mm;padding:.8mm 2mm}
 .rc .ab input:checked ~ span{color:var(--red);font-weight:bold}
 .rc .pr input:checked ~ span{font-weight:bold}
 .rc .ab input:checked + i{border-color:var(--red)}
@@ -227,7 +228,45 @@ input[type=date].box{width:36mm;flex:none}
 .cb.pos input:checked ~ span{color:#1a7f37;font-weight:bold}
 .cb.neg input:checked ~ span{color:#c62828;font-weight:bold}
 .legend{font-size:8pt;color:var(--grey);margin:1mm 0 2mm}.legend b.g{color:#1a7f37}.legend b.r{color:#c62828}
-</style></head>
+</style><style id="printCompact">
+/* ---- impression : fiche compacte (2 pages max) ; la taille des photos n'est PAS modifiée ---- */
+@media print{
+ @page{size:A4;margin:6mm 8mm}
+ body{font-size:8.6pt}
+ .ttl{font-size:13pt;padding-left:3mm;border-left-width:3mm}.logos{height:10mm}
+ header{margin-bottom:0}
+ .ident{margin:2mm 0 1mm;gap:1.5mm 4mm}
+ .ident label.f{font-size:8.6pt;gap:1.5mm}
+ input.box{height:5.8mm;padding:.5mm 1.5mm;font-size:8.6pt}
+ #snInp{height:6.5mm;font-size:10.5pt}
+ .ident input.imei{height:7mm;font-size:11pt}
+ .brands{gap:.5mm 3.5mm;margin:.5mm 0}
+ .cb{font-size:8.3pt;margin:.2mm 0;gap:1.4mm}.cb i{width:3mm;height:3mm}
+ .warn{font-size:8.4pt;margin:1.2mm 0}
+ h2{font-size:9.3pt;margin:1.6mm 0 .8mm}h2 em{font-size:7.6pt}
+ textarea{height:9mm;font-size:8.4pt;padding:.8mm 1.5mm}
+ .loc{margin:1.4mm 0;padding:1.3mm 2.2mm;border-width:1.5px}
+ .loc h2{font-size:9.2pt;margin:0 0 .6mm}.loc .why{font-size:7.4pt;margin:0 0 1mm}
+ .loc .cols{gap:1.2mm 3mm}.loc .os{padding:.8mm 1.6mm}.loc .os>b:first-child{font-size:8.4pt;margin-bottom:.4mm}
+ .loc .cb{font-size:7.5pt;margin:.15mm 0;gap:1.4mm}.loc .ok{margin-top:1mm!important;padding-top:.6mm}
+ .recu{margin:.5mm 0 1.5mm}.rc{padding:.2mm 0;gap:2mm}.rc .rn{font-size:8.5pt}.rc .cb{font-size:8.1pt}
+ .rc.rfree input.box{height:5mm}
+ .views .view svg,.views.v4 .view svg{height:29mm}
+ .view{padding:1mm 1mm 0}.view .cap{font-size:7.4pt;padding:0 0 .8mm}
+ .mk{width:4.4mm;height:4.4mm;margin:-2.2mm 0 0 -2.2mm;font-size:7.4pt}
+ .states{margin:1mm 0 1.5mm;gap:0 5mm}
+ .row{grid-template-columns:16mm 44mm 1fr;gap:2mm;padding:.8mm 0}
+ .ico{width:16mm;height:11.5mm}.ico svg{width:13mm;height:10mm}
+ .txt h3{font-size:8.4pt;margin:0 0 .3mm}.txt p{font-size:7.2pt;line-height:1.18}
+ .opts{gap:.4mm 3mm}.gt{font-size:7pt}
+ .verdict{padding:1.5mm 3mm;margin:1.5mm 0}.verdict h3{font-size:9pt;margin:0 0 1mm}
+ #photos{margin-top:1.5mm}
+ h2{break-after:avoid}textarea{break-inside:avoid}
+ .sign{margin-top:1.5mm;gap:1.5mm 4mm;font-size:8pt}.pad{aspect-ratio:12/1}.sg{padding:1mm 1.5mm}
+ .foot{margin-top:1mm}
+}
+</style>
+</head>
 <body>
 <div id="qrOv"><video id="qrVid" playsinline muted></video><div class="qrst" id="qrSt"></div><button type="button" id="qrClose">Fermer</button></div>
 <div class="toolbar"><a href="index.html" style="color:#fff;text-decoration:none;font-weight:bold">&larr; Hub</a><button onclick="window.print()">Imprimer / PDF</button><button onclick="saveFile()">&#128190; Enregistrer</button><label class="tb">&#128194; Ouvrir<input type="file" id="openFile" accept=".json,application/json" hidden></label><button class="sec" onclick="resetAll()">Réinitialiser</button><span id="msg">Cases cliquables (vert = conforme, rouge = anomalie) · repères sur schéma · photos · signatures</span></div>
@@ -251,7 +290,6 @@ input[type=date].box{width:36mm;flex:none}
     <label class="f">IMEI 2 (si présent) : <input class="box imei" type="text" id="imei2" maxlength="30"></label>
   </div>
   <label class="f">Date d'achat : <input class="box" type="date"></label>
-  <label class="f w2">Accessoires déposés : <input class="box" type="text" placeholder="ex. chargeur, câble, coque, carte SIM, carte mémoire…"></label>
 </div>
 <div style="font-weight:bold;font-size:10pt">Marque :</div>
 <div class="brands"><label class="cb"><input type="checkbox"><i></i><span>Apple</span></label><label class="cb"><input type="checkbox"><i></i><span>Samsung</span></label><label class="cb"><input type="checkbox"><i></i><span>Xiaomi</span></label><label class="cb"><input type="checkbox"><i></i><span>Google</span></label><label class="cb"><input type="checkbox"><i></i><span>Huawei</span></label><label class="cb"><input type="checkbox"><i></i><span>Honor</span></label><label class="cb"><input type="checkbox"><i></i><span>Oppo</span></label><label class="cb"><input type="checkbox"><i></i><span>OnePlus</span></label><label class="cb"><input type="checkbox"><i></i><span>Motorola</span></label><label class="cb"><input type="checkbox"><i></i><span>Nothing</span></label><label class="cb"><input type="checkbox"><i></i><span>Autre :</span></label> <input class="line" type="text" placeholder="préciser" style="width:30mm"></div>
@@ -271,7 +309,7 @@ input[type=date].box{width:36mm;flex:none}
 </div>
 <h2>Éléments reçus avec le produit</h2>
 <button type="button" class="btn sec rcall" id="rcAll">&#10003; Tout présent</button>
-<div class="recu"><div class="rc"><span class="rn">Téléphone</span><label class="cb pr pos"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab neg"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Chargeur secteur</span><label class="cb pr pos"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab neg"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Câble de charge</span><label class="cb pr pos"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab neg"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Coque / étui</span><label class="cb pr pos"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab neg"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Carte SIM (ou tiroir)</span><label class="cb pr pos"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab neg"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Carte mémoire</span><label class="cb pr pos"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab neg"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Écouteurs / oreillettes</span><label class="cb pr pos"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab neg"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Boîte d&#39;origine</span><label class="cb pr pos"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab neg"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Autres accessoires</span><label class="cb pr pos"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab neg"><input type="checkbox"><i></i><span>Absent</span></label></div></div>
+<div class="recu"><div class="rc"><span class="rn">Téléphone</span><label class="cb pr pos"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab neg"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Chargeur secteur</span><label class="cb pr pos"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab neg"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Câble de charge</span><label class="cb pr pos"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab neg"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Coque / étui</span><label class="cb pr pos"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab neg"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Carte SIM (ou tiroir)</span><label class="cb pr pos"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab neg"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Carte mémoire</span><label class="cb pr pos"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab neg"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Écouteurs / oreillettes</span><label class="cb pr pos"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab neg"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc"><span class="rn">Boîte d&#39;origine</span><label class="cb pr pos"><input type="checkbox"><i></i><span>Présent</span></label><label class="cb ab neg"><input type="checkbox"><i></i><span>Absent</span></label></div><div class="rc rfree"><span class="rn">Autres accessoires</span><input class="box line" type="text" placeholder="à préciser (ex. film, support, stylet…)"></div></div>
 <div class="gcam acc"><label class="btn rowcam" data-sec="Ensemble des accessoires">&#128247; Photo de l'ensemble des accessoires<span class="n"></span><input type="file" accept="image/*" capture="environment" hidden></label><span>Tous les accessoires remis, réunis sur une seule photo.</span><span class="accth"></span></div>
 
 <h2>Schéma global <em>(À compléter si nécessaire — cliquer sur le schéma pour repérer un défaut, re-cliquer sur le repère pour le retirer)</em></h2>
@@ -349,13 +387,14 @@ input[type=date].box{width:36mm;flex:none}
 </div>
 
 <script>
-var n=0;
+/* repères sur le schéma : numérotés dans l'ordre des clics (1, 2, 3…), jamais renumérotés */
+function mkMax(){var x=0;document.querySelectorAll('.mk').forEach(function(m){var k=+m.dataset.n||0;if(k>x)x=k;});return x;}
+function mkAdd(v,l,t,k){var m=document.createElement('div');m.className='mk';m.style.left=l;m.style.top=t;m.dataset.n=k;m.textContent=k;v.appendChild(m);return m;}
 document.querySelectorAll('.view').forEach(function(v){
   v.addEventListener('click',function(e){
-    if(e.target.classList.contains('mk')){e.target.remove();renum();return;}
-    var r=v.getBoundingClientRect(),m=document.createElement('div');
-    m.className='mk';m.style.left=((e.clientX-r.left)/r.width*100)+'%';m.style.top=((e.clientY-r.top)/r.height*100)+'%';
-    v.appendChild(m);renum();
+    if(e.target.classList.contains('mk')){e.target.remove();return;}
+    var r=v.getBoundingClientRect();
+    mkAdd(v,((e.clientX-r.left)/r.width*100)+'%',((e.clientY-r.top)/r.height*100)+'%',mkMax()+1);
   });
 });
 
@@ -531,7 +570,6 @@ function phSync(){
   var el=document.getElementById(id);
   el.addEventListener('change',function(){addPhotos(el.files);el.value='';});
 });
-function renum(){var i=0;document.querySelectorAll('.mk').forEach(function(m){m.textContent=++i;});}
 
 var dirty=false;
 function nowStr(){return new Date().toLocaleString('fr-FR',{dateStyle:'short',timeStyle:'short'});}
@@ -557,15 +595,23 @@ function collect(){
   var st={app:'fiche-inspection-telephone',v:1,saved:new Date().toISOString()};
   st.cb=Array.prototype.map.call(document.querySelectorAll('input[type=checkbox]'),function(c){return c.checked?1:0;});
   st.tx=statics().map(function(i){return i.value;});
-  st.mk={};document.querySelectorAll('.view').forEach(function(v){st.mk[v.dataset.v]=Array.prototype.map.call(v.querySelectorAll('.mk'),function(m){return[m.style.left,m.style.top];});});
+  st.mk={};document.querySelectorAll('.view').forEach(function(v){st.mk[v.dataset.v]=Array.prototype.map.call(v.querySelectorAll('.mk'),function(m){return[m.style.left,m.style.top,+m.dataset.n||0];});});
   st.ph=Array.prototype.map.call(document.querySelectorAll('#phGrid .ph'),function(p){return{d:p.querySelector('img').src,c:p.querySelector('input').value,s:p.dataset.sec||''};});
   st.sg=Array.prototype.map.call(document.querySelectorAll('.pad'),getSig);
   return st;
 }
+/* nom des fichiers (.json et PDF) : date_N°dossier */
+function fileBase(){
+  var s=statics(),dos=((s[0]&&s[0].value)||'').trim().replace(/[^\wÀ-ÿ\-]+/g,'_').replace(/^_+|_+$/g,'')||'sans-dossier',
+  dt=(s[1]&&/^\d{4}-\d{2}-\d{2}$/.test(s[1].value))?s[1].value:(function(){var d=new Date(),p=function(n){return(n<10?'0':'')+n;};return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());})();
+  return dt+'_'+dos;
+}
+(function(){var old=null;
+  window.addEventListener('beforeprint',function(){old=document.title;document.title=fileBase();});
+  window.addEventListener('afterprint',function(){if(old!==null)document.title=old;old=null;});
+})();
 function saveFile(){
-  var st=collect(),dos=(statics()[0].value||'sans-dossier').replace(/[^\w\-]+/g,'_'),d=new Date(),
-  p=function(n){return(n<10?'0':'')+n;},
-  name='fiche_telephone_'+dos+'_'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'_'+p(d.getHours())+p(d.getMinutes())+'.json';
+  var st=collect(),name=fileBase()+'.json';
   var blob=new Blob([JSON.stringify(st)],{type:'application/json'}),a=document.createElement('a');
   a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();
   setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},500);
@@ -586,8 +632,9 @@ function applyState(st){
   if(st.cb.length!==cbs.length||st.tx.length!==tx.length)warn=true;
   st.cb.forEach(function(v,i){if(cbs[i])cbs[i].checked=!!v;});
   st.tx.forEach(function(v,i){if(tx[i])tx[i].value=v;});
-  document.querySelectorAll('.view').forEach(function(v){(st.mk[v.dataset.v]||[]).forEach(function(q){var m=document.createElement('div');m.className='mk';m.style.left=q[0];m.style.top=q[1];v.appendChild(m);});});
-  renum();
+  var all=[];document.querySelectorAll('.view').forEach(function(v){(st.mk[v.dataset.v]||[]).forEach(function(q){all.push([v,q]);});});
+  var nx=0;all.forEach(function(a){if(+a[1][2]>nx)nx=+a[1][2];});
+  all.forEach(function(a){mkAdd(a[0],a[1][0],a[1][1],+a[1][2]||++nx);});
   (st.ph||[]).forEach(function(p){addPhotoData(p.d,p.c,p.s);});
   var pads=document.querySelectorAll('.pad');(st.sg||[]).forEach(function(d,i){if(pads[i])setSig(pads[i],d);});
   phSync();

@@ -598,10 +598,18 @@ function collect(){
   st.sg=Array.prototype.map.call(document.querySelectorAll('.pad'),getSig);
   return st;
 }
+/* nom des fichiers (.json et PDF) : date_N°dossier */
+function fileBase(){
+  var s=statics(),dos=((s[0]&&s[0].value)||'').trim().replace(/[^\wÀ-ÿ\-]+/g,'_').replace(/^_+|_+$/g,'')||'sans-dossier',
+  dt=(s[1]&&/^\d{4}-\d{2}-\d{2}$/.test(s[1].value))?s[1].value:(function(){var d=new Date(),p=function(n){return(n<10?'0':'')+n;};return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());})();
+  return dt+'_'+dos;
+}
+(function(){var old=null;
+  window.addEventListener('beforeprint',function(){old=document.title;document.title=fileBase();});
+  window.addEventListener('afterprint',function(){if(old!==null)document.title=old;old=null;});
+})();
 function saveFile(){
-  var st=collect(),dos=(statics()[0].value||'sans-dossier').replace(/[^\w\-]+/g,'_'),d=new Date(),
-  p=function(n){return(n<10?'0':'')+n;},
-  name='fiche_balai_'+dos+'_'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'_'+p(d.getHours())+p(d.getMinutes())+'.json';
+  var st=collect(),name=fileBase()+'.json';
   var blob=new Blob([JSON.stringify(st)],{type:'application/json'}),a=document.createElement('a');
   a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();
   setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},500);
