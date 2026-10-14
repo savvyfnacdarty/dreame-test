@@ -196,7 +196,11 @@ input[type=date].box{width:36mm;flex:none}
 .views.v4{grid-template-columns:repeat(4,1fr)}
 .views.v4 .view svg{height:44mm}
 @media screen and (max-width:800px){.views.v4{grid-template-columns:repeat(2,1fr)}.views.v4 .view{border-bottom:1px solid var(--line)}}
-.ident input.imei{letter-spacing:.3px}
+.ident .imeis{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:inherit}
+.ident .imeis label.f{min-width:0;flex-direction:column;align-items:stretch;gap:1mm}
+.ident input.imei{letter-spacing:.6px;font-size:14pt;font-weight:bold;height:11mm;min-width:0;width:100%;box-sizing:border-box}
+@media screen and (max-width:800px){.ident>.w3,.ident>.w2,.ident>.imeis{grid-column:1/-1}.ident .imeis{grid-template-columns:1fr}.ident input.imei{height:16mm;font-size:20px;border:2px solid var(--orange);padding:2mm 3mm}}
+@media print{.ident input.imei{height:8mm;font-size:11.5pt}}
 .opts .grp:empty{display:none}
 
 
@@ -225,15 +229,17 @@ input[type=date].box{width:36mm;flex:none}
 <div class="ident">
   <label class="f w2">N° dossier : <input class="box" type="text"></label>
   <label class="f">Date : <input class="box" type="date"></label>
-  <label class="f">Modèle : <input class="box" type="text" id="mdlInp" placeholder="ex. iPhone 15, Galaxy S24"></label>
-  <label class="f">IMEI 1 : <input class="box imei" type="text" id="imei1" inputmode="numeric" maxlength="17" placeholder="*#06#"></label>
-  <label class="f">IMEI 2 (si présent) : <input class="box imei" type="text" id="imei2" inputmode="numeric" maxlength="17"></label>
-  <div class="f w2 sn"><label class="f" style="flex:1">N° de série : <input class="box" type="text" id="snInp" autocomplete="off"></label>
+  <label class="f w3">Modèle : <input class="box" type="text" id="mdlInp" placeholder="ex. iPhone 15, Galaxy S24"></label>
+  <div class="f w3 sn"><label class="f" style="flex:1">N° de série : <input class="box" type="text" id="snInp" autocomplete="off"></label>
   <button type="button" class="btn snbtn" id="snQr">&#9638; Scanner le QR code</button>
   <label class="btn snbtn sec">&#128247; Photo de l'étiquette (modèle / IMEI / série)<input id="snCam" type="file" accept="image/*" capture="environment" hidden></label></div>
+<div class="w3 snres" id="snRes"></div>
+  <div class="imeis">
+    <label class="f">IMEI 1 : <input class="box imei" type="text" id="imei1" maxlength="30" placeholder="*#06#  (ex. 350362204306849 / 01)"></label>
+    <label class="f">IMEI 2 (si présent) : <input class="box imei" type="text" id="imei2" maxlength="30"></label>
+  </div>
   <label class="f">Date d'achat : <input class="box" type="date"></label>
   <label class="f w2">Accessoires déposés : <input class="box" type="text" placeholder="ex. chargeur, câble, coque, carte SIM, carte mémoire…"></label>
-<div class="w3 snres" id="snRes"></div>
 </div>
 <div style="font-weight:bold;font-size:10pt">Marque :</div>
 <div class="brands"><label class="cb"><input type="checkbox"><i></i><span>Apple</span></label><label class="cb"><input type="checkbox"><i></i><span>Samsung</span></label><label class="cb"><input type="checkbox"><i></i><span>Xiaomi</span></label><label class="cb"><input type="checkbox"><i></i><span>Google</span></label><label class="cb"><input type="checkbox"><i></i><span>Huawei</span></label><label class="cb"><input type="checkbox"><i></i><span>Honor</span></label><label class="cb"><input type="checkbox"><i></i><span>Oppo</span></label><label class="cb"><input type="checkbox"><i></i><span>OnePlus</span></label><label class="cb"><input type="checkbox"><i></i><span>Motorola</span></label><label class="cb"><input type="checkbox"><i></i><span>Nothing</span></label><label class="cb"><input type="checkbox"><i></i><span>Autre :</span></label> <input class="line" type="text" placeholder="préciser" style="width:30mm"></div>
