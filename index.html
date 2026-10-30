@@ -163,9 +163,7 @@
     font-size:.8rem;
   }
   footer span{color:var(--orange);font-weight:600;}
-  .btn-fiches{display:inline-flex;align-items:center;gap:10px;margin-top:18px;background:var(--rouge);color:#fff;text-decoration:none;font-weight:700;font-size:1.05rem;padding:12px 26px;border-radius:30px;box-shadow:0 3px 10px rgba(212,21,27,.3);transition:transform .15s ease,box-shadow .15s ease}
-  .btn-fiches:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(212,21,27,.4)}
-  @media (max-width:640px){.btn-fiches{width:100%;justify-content:center;font-size:1.1rem;padding:14px 20px}}
+  footer a{color:inherit;text-decoration:none;cursor:default;}   /* accès discret aux fiches d'inspection */
 </style>
 <!-- ===== Compteur de consultations (GoatCounter) =====
      Remplacer hub-drive-fnac par le code du site cree sur goatcounter.com
@@ -184,12 +182,11 @@
 <section class="intro">
   <h2>Accès aux Drive / SharePoint constructeurs</h2>
   <p>Cliquez sur le logo d'une marque pour accéder à son espace.</p>
-  <a class="btn-fiches" href="fiches_inspection.html">📋 Fiches d'inspection</a>
 </section>
 
 <main class="grid" id="grid"></main>
 
-<footer>Espace interne <span>Fnac Darty</span></footer>
+<footer>Espace interne <a href="fiches_inspection.html"><span>Fnac Darty</span></a></footer>
 
 <script>
   // === Liste des marques : ajoutez simplement une ligne pour une nouvelle marque ===
